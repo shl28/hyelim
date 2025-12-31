@@ -1,0 +1,17 @@
+git config --global user.name "shl28"
+git config --global user.email "kklim1218@gmail.com"
+
+처음 원격 저장소 만든 후
+echo "# new" >> README.md
+git init
+git add .
+git commit -m "a1223_1"
+git branch -M main
+git remote add origin https://github.com/shl28/hyelim
+git push -u origin main
+
+수정 후
+git add .
+git commit -m "a1223_2"
+git push
+
