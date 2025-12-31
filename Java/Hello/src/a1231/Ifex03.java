@@ -17,14 +17,14 @@ public class Ifex03 {
     // - 나이와 학생 여부를 변수로 저장
     // - 최종 입장료를 출력
 
-    int age = 19;
+    int age = 15;
     boolean isStudent = age >=8 && age <= 19;
     int price = 10000;
 
     if (age>=65) {
         System.out.println("가격은 무료입니다.");
     } else if (age>=20) {
-        System.out.println("가격은 " + price + "원 입니다.");
+        System.out.println("가격은 " + price + "원 입니다.") ;
     } else if (isStudent) {
        System.out.println("가격은 " + (int)(price * 0.5) + "원 입니다.");
     } else {
