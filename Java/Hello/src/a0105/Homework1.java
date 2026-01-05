@@ -1,0 +1,39 @@
+package a0105;
+
+public class Homework1 {
+  public static void main(String[] args) {
+// "붕어빵 매출 왕 찾기" (심화: 최대값과 인덱스)
+// 상황: 일주일 동안 판 붕어빵 개수가 배열에 들어있습니다. (월~일 순서) int[] sales = {120, 150, 95, 200, 180, 300, 250};
+// 1. 일주일 중 가장 많이 판 날의 개수를 구하세요.
+// 2. [보너스] 가장 많이 판 날이 '몇 번째 날(무슨 요일)'인지도 함께 출력해보세요. 
+// (힌트: 최대값을 찾을 때 인덱스 번호를 따로 저장할 변수가 필요합니다.)
+
+    int[] sales = {120, 150, 95, 200, 180, 300, 250};
+    int max = sales[0];
+    int day = 0;
+    for(int i=0; i<sales.length ; i++){
+      if (sales[i]>max) {
+       max = sales[i];
+       day = i ;
+      }
+    }
+
+   System.out.println("붕어빵 최다 판매량 : " + max + "개");
+   System.out.print("최다 판매 요일 : ");
+    if (day == 0) {
+      System.out.print("월요일");
+    } else if(day == 1) {
+      System.out.print("화요일");
+    } else if(day == 2) {
+      System.out.print("수요일");
+    } else if(day == 3) {
+      System.out.print("목요일");
+    } else if(day == 4) {
+      System.out.print("금요일");
+    } else if(day == 5) {
+      System.out.print("토요일");
+    } else {
+      System.out.print("일요일");
+    }
+  }
+}

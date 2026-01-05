@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
+<style>
+  /* html을 디자인할 수 있다. */
+.box{
+width: 150px; 
+height: 150px;
+/* background-color: yellow; */
+/* box 4개의 배경색을 전부 노란색을 준다. */
+}
+.box1{
+  background-color: aqua;
+  padding: 10px;
+  /* 안여백 위 10 오른쪽 10 아래 10 왼쪽 10 (시계방향) */
+  /* border: 1px solid #000; */
+  border: 1px dotted #000;
+  /* 테두리 : 선두께 선모양 색상 */
+  /* dotted 점선 solid 실선 dashed 긴 점선 */
+}
+.box2{
+  background-color: yellow;
+  padding: 10px 20px 30px 40px;
+  /* 안여백 위 10 오른쪽 20 아래 30 왼쪽 40 (시계방향) */
+}
+.box3{
+  background-color: tan;
+  padding: 10px 20px;
+  /* 안여백: 위아래 - 10   좌우 - 20  */
+}
+.box4{
+  background-color: red;
+  padding: 10px 20px 30px;
+  /* 위 10  좌우 20  아래 30 */
+  /* padding: 0 0 0 20px; = padding-left: 20px; */
+}
+</style>
+</head>
+<body>
+  <!-- div : division 구역 -->
+  <!-- class 별명 - box 이면서 box1 이름도 된다. -->
+  <!-- 스타일에 클래스에 효과를 주려면 . 을  앞에 써준다.-->
+  <div class="box box1">박스1</div>
+  <div class="box box2">박스2</div>
+  <div class="box box3">박스3</div>
+  <div class="box box4">박스4</div>
+</body>
+</html>
