@@ -1,0 +1,38 @@
+*{margin: 0; padding: 0;}
+.bigbox{
+  width: 1200px;
+  height: 160px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.box {
+  width: 100px;
+  height: 110px;
+  float: left;
+  padding-top: 40px;
+  text-align: center;
+}
+.title{
+  margin-right: 100px;
+}
+.txt1 {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: left;
+}
+.txt2 {
+  font-size: 13px;
+  font-weight: 400;
+  color: rgb(170, 166, 166);
+  margin-top: 10px;
+  text-align: left;
+}
+.box img{
+  width: 50px;
+  height: 50px;
+  background-size: cover;
+}
+.box p{
+  width: 95px;
+  height: 25px;
+}
