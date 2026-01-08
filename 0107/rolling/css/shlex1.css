@@ -1,0 +1,117 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.contents {
+  width: 1440px;
+  height: 900px;
+  margin: 0 auto;
+  /* border: 1px solid #333; */
+}
+
+.box1 {
+  width: 1440px;
+  height: 100px;
+  text-align: center;
+  /* background-color: aqua; */
+}
+
+.box1 h1 {
+  font: 1.4 'NotoSansKR', arial, sans-serif;
+  margin-top: 10px;
+}
+
+.box1 h4 {
+  font: 1.4 'NotoSansKR', arial, sans-serif;
+  font-weight: 300;
+  color: #1e1e1e;
+}
+
+.box2 {
+  width: 1440px;
+  height: 480px;
+  text-align: center;
+}
+
+.box2 div {
+  width: 300px;
+  height: 430px;
+  float: left;
+  margin-right: 15px;
+  padding: 20px;
+  text-align: center;
+  border: 1px solid black;
+}
+
+.box2 div img {
+  width: 97px;
+  height: 100px;
+  margin-top: 30px;
+}
+
+.box2 div .txt1 {
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  margin-right: auto;
+  margin-left: auto;
+  margin-bottom: 20px;
+  margin-top: 30px;
+  line-height: 40px;
+  background-color: #003e73;
+  border-radius: 100%;
+  color: #fff;
+}
+
+.box2 div .txt2 {
+  text-align: center;
+  color: #003e73;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.box2 div .txt3 {
+  font-weight: 300;
+  color: #1e1e1e;
+}
+
+.lbox4 {
+  margin-right: 0;
+}
+
+.box3 {
+  width: 1440px;
+  height: 200px;
+  text-align: center;
+  /* background-color: chartreuse; */
+}
+
+.box3 .bbox1 {
+  margin-top: 50px;
+  margin-bottom: 25px;
+}
+
+.text1 {
+  line-height: 1.6;
+  color: #003e73;
+  font-size: 20px;
+  font-weight: 300;
+}
+
+.text1 span {
+  font-weight: 700;
+}
+
+.text2 {
+  width: 340px;
+  height: 59px;
+  padding: 18px 10px;
+  background-color: #003b5a;
+  color: #fff;
+  border: 1px solid #003b5a;
+  box-sizing: border-box;
+  margin-left: auto;
+  margin-right: auto;
+}
