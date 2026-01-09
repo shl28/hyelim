@@ -37,6 +37,7 @@ class Student {
   // 객체가 만들어지면서 실행됨
   Student(){
     System.out.println("기본 생성자 실행");
+    // string: 빈문자열, int: 0 : 기본으로 들어감
   }
 
 

@@ -1,0 +1,136 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+#wrapper {
+  width: 900px;
+  margin: 0 auto;
+}
+
+header {
+  height: 200px;
+  /* background-color: #f46075;
+  background-image: url(../img/nav2.png);
+  background-repeat: no-repeat;
+  background-position: 95% 40%; */
+  /* background-position: 100%(좌우) 20%(위아래); */
+  background: #f46075 url(../img/nav2.png) no-repeat 95% 40%;
+}
+
+header h1 {
+  float: left;
+  color: #fff;
+  margin-left: 50px;
+  margin-top: 65px;
+}
+
+header .logo {
+  float: right;
+  margin-top: 30px;
+  margin-right: 20px;
+}
+
+nav {
+  height: 60px;
+  background-color: #ccc;
+}
+
+nav ul {
+  list-style: none;
+}
+
+nav ul li {
+  float: left;
+  margin-left: 50px;
+  margin-top: 10px;
+  /* a넓이, 높이 주면 li크기와 동일 */
+}
+
+nav ul li a {
+  /* a태그 : 인라인 요소, 넓이 높이 지정불가 */
+  display: block;
+  width: 160px;
+  height: 40px;
+  line-height: 40px;
+  /* 세로 중앙 정렬(height = line-height) */
+  /* background-color: pink; */
+  text-align: center;
+  /* 가로 중앙 정렬 */
+  color: #000;
+  text-decoration: none;
+}
+
+nav ul li a:hover {
+  background-color: #f46075;
+  font-weight: bold;
+  color: #fff;
+  border-radius: 20px;
+}
+
+main {
+  /* height: 550px; */
+  overflow: hidden;
+  /* section, aside 를  감싸는 main 에게 높이 부여 */
+}
+
+section {
+  width: 650px;
+  height: 550px;
+  float: left;
+  background-color: skyblue;
+}
+
+section h2 {
+  text-align: center;
+  padding: 10px 0;
+}
+
+section article {
+  width: 280px;
+  height: 180px;
+  border: 1px solid #000;
+  float: left;
+  padding: 10px;
+  margin-left: 15px;
+  margin-top: 15px;
+  font-size: 13px;
+}
+
+/* section article {
+  font-size: 13px;
+} */
+
+article h3 {
+  background: url(../img/bg.png) no-repeat;
+  padding-left: 30px;
+  padding-bottom: 10px;
+}
+
+article p {
+  text-align: justify;
+}
+
+aside {
+  width: 250px;
+  height: 550px;
+  float: left;
+  background-color: #ffffcc;
+  text-align: center;
+}
+
+aside h2 {
+  padding: 10px 0;
+}
+
+aside img {
+  padding-bottom: 10px;
+}
+
+footer {
+  height: 50px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  line-height: 50px;
+}
