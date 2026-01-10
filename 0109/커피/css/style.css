@@ -24,11 +24,17 @@ header {
 header .h_top {
   width: 800px;
   height: 280px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
 }
 
-header h2 {
+header h1 {
+  width: 120px;
+  height: 40px;
   color: white;
   font-weight: bold;
+  margin: 40px 60px 40px 40px;
 }
 
 header .h_bottom {
