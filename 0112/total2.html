@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <!-- 외부 스타일: 가장 이상적-->
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    h2 {
+      color: green;
+      font-size: 20px;
+    }
+
+    #title {
+      color: orange;
+      font-size: 32px;
+    }
+
+    h2, h3 {
+      border: 1px solid #333;
+    }
+    /* > : 자식선택자  바로 아래 자식만 선택 */
+    ul.menu > li{
+      border: 1px solid #333;
+      /* float: left; */
+    }
+    /* ul.menu li 자손(하위) ul.menu 밑에 모든 li에 보더 */
+    /* 방문 전 */
+    a:link{
+      color: black;
+    }
+    /* 방문 후 */
+    a:visited{
+      color: black;
+    }
+    /* 마우스 올렸을 때 */
+    a:hover{
+      color: red;
+    }
+    /* 클릭 시 */
+    a:active{
+      background-color: orange;
+    }
+    ul.menu > li:nth-child(1){background-color: yellow;}
+    /* after 선택자 - 중요*/
+    ul.menu::after{
+      content: "나는 맨뒤";
+    }
+    ul.menu::before{
+      content: "나는 맨앞";
+    }
+    .p1{border: 2px solid red;}
+    .p2{border: 2px dashed blue;}
+    .p3{border: 2px dotted green;}
+    /* double 최소 3px 되어야 이중선으로 나옴 */
+    .p4{border: 3px double red;}
+    /* 음각 */
+    .p5{border: 10px groove yellowgreen;}
+    /* 양각 */
+    .p6{border: 10px ridge yellowgreen;}
+    /* 안쪽으로 눌린 느낌 */
+    .p7{border: 10px inset yellowgreen;}
+    /* 밖으로 튀어나온 느낌 */
+    .p8{border: 10px outset yellowgreen;}
+  </style>
+</head>
+
+<body>
+  <!-- 인라인 스타일 CSS 비추천 -->
+  <p style="color: red; font-size: 20px;">글자</p>
+  <h2>내용2</h2>
+  <h3 id="title">첫번째 h3</h3>
+  <h3>첫번째 h3</h3>
+  <ul class="menu">
+    <li>
+      <a href="#">Mainmenu1</a>
+      <ul>
+        <li>
+          <a href="#">submenu1</a>
+        </li>
+        <li>
+          <a href="#">submenu2</a>
+        </li>
+        <li>
+          <a href="#">submenu3</a>
+        </li>
+        <li>
+          <a href="#">submenu4</a>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <a href="#">Mainmenu2</a>
+      <ul>
+        <li>
+          <a href="#">submenu1</a>
+        </li>
+        <li>
+          <a href="#">submenu2</a>
+        </li>
+        <li>
+          <a href="#">submenu3</a>
+        </li>
+        <li>
+          <a href="#">submenu4</a>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <a href="#">Mainmenu3</a>
+      <ul>
+        <li>
+          <a href="#">submenu1</a>
+        </li>
+        <li>
+          <a href="#">submenu2</a>
+        </li>
+        <li>
+          <a href="#">submenu3</a>
+        </li>
+        <li>
+          <a href="#">submenu4</a>
+        </li>
+      </ul>
+    </li>
+    <li>
+      <a href="#">Mainmenu4</a>
+      <ul>
+        <li>
+          <a href="#">submenu1</a>
+        </li>
+        <li>
+          <a href="#">submenu2</a>
+        </li>
+        <li>
+          <a href="#">submenu3</a>
+        </li>
+        <li>
+          <a href="#">submenu4</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+  <p class="p1">요즈음에는 반응형 웹이 대세이다.</ㅔ>
+  <p class="p2">요즈음에는 반응형 웹이 대세이다.</p>
+  <p class="p3">요즈음에는 반응형 웹이 대세이다.</p>
+  <p class="p4">요즈음에는 반응형 웹이 대세이다.</p>
+  <p class="p5">요즈음에는 반응형 웹이 대세이다.</p>
+  <p class="p6">요즈음에는 반응형 웹이 대세이다.</p>
+  <p class="p7">요즈음에는 반응형 웹이 대세이다.</p>
+  <p class="p8">요즈음에는 반응형 웹이 대세이다.</p>
+</body>
+
+</html>
+
+<!-- .box {
+    margin-left: 15px;    /* 왼쪽 외부 여백 */
+    margin-right: 15px;   /* 오른쪽 외부 여백 */
+    margin-top: 10px;     /* 위쪽 외부 여백 */
+    margin-bottom: 15px;  /* 아래쪽 외부 여백 */
+    
+    /* 축약형 */
+    margin: 10px;           /* 상하좌우 모두 10px */
+    margin: 10px 15px;      /* 상하 10px, 좌우 15px */
+    margin: 10px 15px 20px; /* 상 10px, 좌우 15px, 하 20px */
+    margin: 10px 15px 20px 25px; /* 상 우 하 좌 (시계방향) */
+} -->
