@@ -1,0 +1,396 @@
+# 상속 & 오버라이딩 문제
+
+## 📌 문제 설명
+
+다음 조건을 만족하는 상속 관계 프로그램을 작성하세요.
+
+---
+
+## 1️⃣ 부모 클래스 Person
+
+아래의 멤버를 가지는 `Person` 클래스를 작성하세요.
+
+### 🔹 필드
+
+- `String name`: 이름
+- `int age`: 나이
+
+### 🔹 생성자
+
+- 이름과 나이를 매개변수로 받아 초기화하는 생성자
+
+### 🔹 메서드
+
+- **`introduce()`**
+  - `"이름입니다."` 형식으로 출력
+  
+- **`work()`**
+  - `"이름이(가) 일을 합니다."` 출력
+  
+- **`displayInfo()`**
+  - `"이름: 이름, 나이: 나이"` 출력
+
+---
+
+## 2️⃣ 자식 클래스 Student
+
+`Person` 클래스를 상속받아 `Student` 클래스를 작성하세요.
+
+### 🔹 필드
+
+- `String major`: 전공
+
+### 🔹 생성자
+
+- 이름, 나이, 전공을 매개변수로 받아 초기화
+- **부모 생성자를 반드시 호출할 것** (`super()` 사용)
+
+### 🔹 메서드
+
+- **`work()` 메서드를 오버라이딩**
+  - `"이름이(가) 공부를 합니다."` 출력
+  
+- **`study()`**
+  - `"이름이(가) 전공를 공부합니다."` 출력
+  
+- **`displayInfo()` 메서드를 오버라이딩**
+  - 부모의 `displayInfo()` 호출 (`super.displayInfo()`)
+  - 전공 정보 추가 출력 (`"전공: 전공"`)
+
+---
+
+## 3️⃣ 자식 클래스 Teacher
+
+`Person` 클래스를 상속받아 `Teacher` 클래스를 작성하세요.
+
+### 🔹 필드
+
+- `String subject`: 담당 과목
+
+### 🔹 생성자
+
+- 이름, 나이, 과목을 매개변수로 받아 초기화
+- **부모 생성자를 반드시 호출할 것** (`super()` 사용)
+
+### 🔹 메서드
+
+- **`work()` 메서드를 오버라이딩**
+  - `"이름이(가) 수업을 합니다."` 출력
+  
+- **`teach()`**
+  - `"이름이(가) 과목을 가르칩니다."` 출력
+  
+- **`displayInfo()` 메서드를 오버라이딩**
+  - 부모의 `displayInfo()` 호출 (`super.displayInfo()`)
+  - 과목 정보 추가 출력 (`"과목: 과목"`)
+
+---
+
+## 4️⃣ 실행 클래스
+
+`main` 메서드에서 다음을 수행하세요.
+
+### Student 객체 생성
+
+- 이름: `"민수"`
+- 나이: `20`
+- 전공: `"컴퓨터공학"`
+
+### Teacher 객체 생성
+
+- 이름: `"김선생"`
+- 나이: `40`
+- 과목: `"자바"`
+
+### 각 객체의 메서드를 호출하여 아래와 같은 결과가 나오도록 하세요.
+
+---
+
+## 🖥 실행 결과 예시
+
+```
+민수입니다.
+민수이(가) 공부를 합니다.
+민수이(가) 컴퓨터공학를 공부합니다.
+이름: 민수, 나이: 20
+전공: 컴퓨터공학
+
+김선생입니다.
+김선생이(가) 수업을 합니다.
+김선생이(가) 자바을 가르칩니다.
+이름: 김선생, 나이: 40
+과목: 자바
+```
+
+---
+
+## 💡 힌트
+
+### 힌트 1: 상속 문법
+
+```java
+class 자식클래스 extends 부모클래스 {
+    // ...
+}
+```
+
+### 힌트 2: 부모 생성자 호출
+
+```java
+public Student(String name, int age, String major) {
+    super(name, age);  // 부모 생성자 호출
+    this.major = major;
+}
+```
+
+### 힌트 3: 메서드 오버라이딩
+
+```java
+@Override
+public void work() {
+    // 자식 클래스의 구현
+}
+```
+
+### 힌트 4: 부모 메서드 호출
+
+```java
+@Override
+public void displayInfo() {
+    super.displayInfo();  // 부모 메서드 호출
+    // 추가 출력
+}
+```
+
+---
+
+## ✅ 정답 코드
+
+<details>
+<summary>정답 코드 보기 (클릭)</summary>
+
+### Person.java
+
+```java
+/**
+ * 부모 클래스: Person
+ */
+class Person {
+    // 필드
+    String name;
+    int age;
+    
+    // 생성자
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+    
+    // 메서드
+    public void introduce() {
+        System.out.println(name + "입니다.");
+    }
+    
+    public void work() {
+        System.out.println(name + "이(가) 일을 합니다.");
+    }
+    
+    public void displayInfo() {
+        System.out.println("이름: " + name + ", 나이: " + age);
+    }
+}
+```
+
+### Student.java
+
+```java
+/**
+ * 자식 클래스: Student
+ * Person을 상속받음
+ */
+class Student extends Person {
+    // 필드
+    String major;
+    
+    // 생성자
+    public Student(String name, int age, String major) {
+        super(name, age);  // 부모 생성자 호출
+        this.major = major;
+    }
+    
+    // work() 메서드 오버라이딩
+    @Override
+    public void work() {
+        System.out.println(name + "이(가) 공부를 합니다.");
+    }
+    
+    // Student만의 메서드
+    public void study() {
+        System.out.println(name + "이(가) " + major + "를 공부합니다.");
+    }
+    
+    // displayInfo() 메서드 오버라이딩
+    @Override
+    public void displayInfo() {
+        super.displayInfo();  // 부모 메서드 호출
+        System.out.println("전공: " + major);
+    }
+}
+```
+
+### Teacher.java
+
+```java
+/**
+ * 자식 클래스: Teacher
+ * Person을 상속받음
+ */
+class Teacher extends Person {
+    // 필드
+    String subject;
+    
+    // 생성자
+    public Teacher(String name, int age, String subject) {
+        super(name, age);  // 부모 생성자 호출
+        this.subject = subject;
+    }
+    
+    // work() 메서드 오버라이딩
+    @Override
+    public void work() {
+        System.out.println(name + "이(가) 수업을 합니다.");
+    }
+    
+    // Teacher만의 메서드
+    public void teach() {
+        System.out.println(name + "이(가) " + subject + "을 가르칩니다.");
+    }
+    
+    // displayInfo() 메서드 오버라이딩
+    @Override
+    public void displayInfo() {
+        super.displayInfo();  // 부모 메서드 호출
+        System.out.println("과목: " + subject);
+    }
+}
+```
+
+### PersonMain.java (실행 클래스)
+
+```java
+/**
+ * 실행 클래스
+ */
+public class PersonMain {
+    public static void main(String[] args) {
+        // Student 객체 생성
+        Student student = new Student("민수", 20, "컴퓨터공학");
+        
+        // Student 메서드 호출
+        student.introduce();      // 부모 메서드
+        student.work();           // 오버라이딩된 메서드
+        student.study();          // Student만의 메서드
+        student.displayInfo();    // 오버라이딩된 메서드
+        
+        System.out.println();
+        
+        // Teacher 객체 생성
+        Teacher teacher = new Teacher("김선생", 40, "자바");
+        
+        // Teacher 메서드 호출
+        teacher.introduce();      // 부모 메서드
+        teacher.work();           // 오버라이딩된 메서드
+        teacher.teach();          // Teacher만의 메서드
+        teacher.displayInfo();    // 오버라이딩된 메서드
+    }
+}
+```
+
+</details>
+
+---
+
+## 📝 풀이 설명
+
+### 1. 상속 구조
+
+```
+        Person (부모 클래스)
+            ▲
+            │ extends
+    ┌───────┴───────┐
+    │               │
+ Student          Teacher
+(자식 클래스)    (자식 클래스)
+```
+
+### 2. 핵심 포인트
+
+#### ✅ 상속 (extends)
+
+- `Student`와 `Teacher`는 `Person`을 상속받음
+- 부모 클래스의 필드와 메서드를 자동으로 상속받음
+
+#### ✅ super() 사용
+
+- 자식 클래스의 생성자에서 부모 생성자를 반드시 호출
+- 첫 번째 줄에 위치해야 함
+
+#### ✅ 메서드 오버라이딩
+
+- `work()` 메서드: 각 자식 클래스에서 다르게 구현
+- `displayInfo()` 메서드: 부모 메서드 호출 후 추가 정보 출력
+
+#### ✅ super.메서드명()
+
+- 오버라이딩된 메서드에서 부모 메서드를 호출할 때 사용
+- `super.displayInfo()`로 부모의 `displayInfo()` 호출
+
+---
+
+## 🎯 학습 목표
+
+이 문제를 통해 다음을 학습할 수 있습니다:
+
+- [ ] 상속(`extends`)의 개념과 사용법
+- [ ] 부모 생성자 호출(`super()`)
+- [ ] 메서드 오버라이딩(`@Override`)
+- [ ] 부모 메서드 호출(`super.메서드명()`)
+- [ ] 상속 관계에서의 객체 생성과 메서드 호출
+
+---
+
+## 🔍 추가 문제 (도전)
+
+### 문제 1: 다형성 활용
+
+```java
+// 부모 타입으로 자식 객체 참조
+Person person1 = new Student("영희", 19, "수학");
+Person person2 = new Teacher("박선생", 35, "영어");
+
+// 배열로 관리
+Person[] people = {person1, person2};
+
+// 모든 사람 소개하기
+for (Person person : people) {
+    person.introduce();
+    person.work();
+}
+```
+
+### 문제 2: 추가 자식 클래스 만들기
+
+`Person`을 상속받는 `Employee` 클래스를 만들어보세요.
+
+- 필드: `String department` (부서)
+- `work()` 오버라이딩: `"이름이(가) 근무를 합니다."` 출력
+- `workAt()` 메서드: `"이름이(가) 부서에서 일합니다."` 출력
+
+---
+
+## 📚 관련 자료
+
+- [상속, 추상 클래스, 인터페이스](./상속-추상클래스-인터페이스.md)
+- [Java 8장: 객체지향 핵심 개념](./8장_객체지향_핵심_개념.md)
+
