@@ -34,7 +34,7 @@ class SmartCalculator extends Calculator {
     // [2] 오버라이딩 (Overriding): 부모의 기능을 내 입맛에 맞게 덮어씀(재정의)
     @Override
     public void showDisplay() {
-        System.out.println("--- ✨ " + owner + "의 스마트 계산기 구동중 ---");
+        System.out.println("--- " + owner + "의 스마트 계산기 구동중 ---");
     }
 }
 
