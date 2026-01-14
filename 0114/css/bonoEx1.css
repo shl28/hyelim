@@ -1,0 +1,117 @@
+* { margin: 0; 
+    padding: 0;
+    box-sizing: border-box;
+}
+.container {
+    width: 500px;
+    height: 500px;
+    border: 1px solid #333;
+    margin: 0 auto;
+    /* box-sizing: border-box; */
+}
+.head{
+    width: 500px;
+    height: 500px;
+    border: 8px solid #000;
+    /* box-sizing: border-box; */
+    border-radius: 50%;
+    background-color: #71a2ff;
+    position: relative;
+}
+.eye {
+    width: 35px;
+    height: 35px;
+    background-color: black;
+    border-radius: 50%;
+    position: absolute;
+}
+.eye.left{
+    top: 180px;
+    left: 100px;
+}
+.eye.right{
+    top: 180px;
+    right: 100px;
+}
+.nose{
+    width: 45px;
+    height: 45px;
+    background-color: black;
+    border-radius: 50%;
+    position: absolute;
+    top: 320px;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 50;
+}
+.mouse{
+    width: 100px;
+    height: 125px;
+    background-color: #fff;
+    border: 5px solid #000;
+    border-radius: 50%;
+    position: absolute;
+    top: 310px;
+}
+.mouse.left{
+    left: 150px;
+    transform: rotate(45deg);
+    z-index: 10;
+}
+.mouse.right{
+    right: 150px;
+    transform: rotate(-45deg);
+    z-index: 20;
+}
+.beardbox{
+    width: 80px;
+    height: 120px;
+    position: absolute;
+    top: 300px;
+}
+.beardbox.left{
+    left: 105px;
+}
+.beardbox.right{
+    right: 105px;
+}
+.line {
+    width: 75px;
+    height: 3px;
+    background-color: #000;
+    position: absolute;
+    z-index: 30;
+}
+.line.top{
+    top: 35px;
+    transform: rotate(20deg);
+    transform-origin: right;
+}
+.line.center{
+    top: 70px;
+}
+.line.bottom{
+    top: 105px;
+    transform: rotate(-20deg);
+    transform-origin: right;
+}
+.line1 {
+    width: 80px;
+    height: 3px;
+    background-color: #000;
+    position: absolute;
+    z-index: 30;
+}
+.line1.top{
+    top: 35px;
+    transform: rotate(-20deg);
+    transform-origin: left;
+}
+.line1.center{
+    top: 70px;
+}
+.line1.bottom{
+    top: 105px;
+    transform: rotate(20deg);
+    transform-origin: left;
+}
