@@ -1,0 +1,32 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+.bigbox{
+    width: 1000px;
+    margin: 10px auto;
+    border: 5px solid tan;
+    display: flex;
+    justify-content: space-around;
+    padding: 20px 0;
+}
+ul{list-style: none;}
+.bigbox .box{
+    /* flex: 1; */
+    /* 각 박스크기가 동일 */
+    width: 200px;
+    height: 150px;
+    border: 1px solid tan;
+    position: relative;
+    overflow: hidden;
+}
+.bigbox .box img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    transition: all 0.5s;
+    /* transform: scale(1);  생략가능*/
+}
+.bigbox .box:hover img {
+    transform: scale(1.2);
+}

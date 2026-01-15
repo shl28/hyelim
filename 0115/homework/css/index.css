@@ -1,0 +1,26 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.container{
+    margin: 20px auto;
+    width: 700px;
+    height: 600px;
+    border: 3px solid #333;
+}
+ul{
+    list-style: none;
+}
+.bigbox{
+    display: flex;
+    justify-content: space-around;
+}
+.box.left{
+    width: 300px;
+    height: 240px;
+}
+.box.right{
+    width: 300px;
+    height: 500px;
+}
