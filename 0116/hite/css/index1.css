@@ -15,7 +15,6 @@ h2 img{
     width: 1070px;
     height: 800px;
     position: relative;
-    /* border: 1px solid blue; */
     margin: 0 auto;
 }
 .box{
@@ -67,33 +66,25 @@ p{
     height: 100%;
     left: 0;
     top: 30%;
-    padding-bottom: 20px;
+    /* padding-bottom: 20px; */
     font-size: 14px;
-    background: url("../img/more.png") no-repeat center 30%;
     opacity: 0;
     transition: all 0.3s;
     box-sizing: border-box;
 }
-.box1 p {
-    background-position: center 35%;
+p::after {
+    content: "";
+    display: block;
+    width: 127px;
+    height: 32px;
+    background: url("../img/more.png") no-repeat center/contain;
+    margin: 15px auto 0; /* 아이콘 위에 항상 15px의 간격 유지! */
 }
 .box2 p{
     top: 40%;
-    background-position: center 15%;
 }
-.box3 p,  .box4 p, .box7 p, .box9 p{
-    background-position: center 25%;
-}
-.box5 p {
-    background-position: center 35%;
-}
-.box6 p{
+.box6 p, .box8 p{
     top: 40%;
-    background-position: center 25%;
-}
-.box8 p{
-    top: 40%;
-    background-position: center 17%;
 }
 .box:hover p{
     opacity: 1;
