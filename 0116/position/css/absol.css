@@ -106,6 +106,7 @@ h2{
     color: #fff;
     text-align: center;
     padding-top: 50%;
+    /* 말고 px 로 주기, width 기준으로 들어가기 때문 */
     box-sizing: border-box;
     background: url('../images/more.png') no-repeat 50% 70%;
     opacity: 0;
