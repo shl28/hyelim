@@ -16,9 +16,12 @@ public class StudentApp {
 
             int selNum = 0;
             try {
+                // try안에서만 값이 대입
                 selNum = Integer.parseInt(scanner.nextLine());
             } catch (Exception e) {
                 // 잘못된 입력 처리
+                // selNum 값이 안들어감
+                // 자바는 초기화 됐는지 확인하고 검사 - 에러
             }
             
             switch (selNum) {

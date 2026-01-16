@@ -1,0 +1,113 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+h2{
+    text-align: center;
+    margin-top: 50px;
+}
+.bigbox{
+    position: relative;
+    width: 830px;
+    height: 310px;
+    border: 1px solid red;
+    margin: 100px auto 0;
+}
+.box{
+    width: 200px;
+    height: 150px;
+    position: absolute;
+    display: none;
+}
+.box img{
+    display: block;
+    width: 100%;
+}
+.box1{
+    display: block;
+    top: 0;
+    left: 0;
+}
+.box2{
+    display: block;
+    top: 160px;
+    left: 0;
+}
+.box3{
+    display: block;
+    top: 0;
+    left: 210px;
+    height: 310px;
+}
+.box4{
+    display: block;
+    top: 0;
+    left: 420px;
+}
+.box5{
+    display: block;
+    top: 0;
+    left: 630px;
+    /* 또는 right: 0 */
+}
+.box6{
+    display: block;
+    top: 160px;
+    left: 420px;
+    /* bottom: 0; */
+    /* right: 0; */
+    width: 410px;
+}
+.box::before{
+    content: "";
+    position: absolute;
+    width: 0%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background-color: rgba(0, 0, 255, 0.7);
+    transition: all 0.5s;
+}
+.box:hover::before{
+    width: 100%;
+}
+.box6::before{
+    width: 100%;
+    height: 0%;
+}
+.box6:hover::before{
+    height: 100%;
+}
+.box p{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    color: #fff;
+    text-align: center;
+    padding-top: 20%;
+    box-sizing: border-box;
+    background: url('../images/more.png') no-repeat 50% 80%;
+    opacity: 0;
+    transition: all 0.5s;
+}
+.box:hover p {
+    opacity: 1;
+}
+
+/* box3 는 길기에 p 나오는 위치가 달라야 함 */
+.box3 p{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    color: #fff;
+    text-align: center;
+    padding-top: 50%;
+    box-sizing: border-box;
+    background: url('../images/more.png') no-repeat 50% 70%;
+    opacity: 0;
+    transition: all 0.5s;
+}
