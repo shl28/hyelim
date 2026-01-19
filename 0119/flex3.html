@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+<style>
+.flex-container{
+    width: 1500px;
+    height: 200px;
+    /* 높이와 넓이를 여유있게 줌 */
+    background-color: dodgerblue;
+    display: flex;
+    justify-content: space-around;
+    /* 좌우 가로 가운데 정렬 */
+    align-items: center;
+    /* div 원래높이인 75px 유지하면서 세로 중앙 정렬 */
+}  
+.flex-container > div {
+    background-color: #f1f1f1;
+    width: 100px;
+    text-align: center;
+    font-size: 30px;
+    line-height: 75px;
+    margin: 10px;
+}
+</style>
+</head>
+<body>
+    <h1>flexiable boxes</h1>
+    <div class="flex-container">
+        <div style="flex-grow: 2;">1</div>
+        <div style="flex-grow: 3;">2</div>
+        <div style="flex-grow: 5;">3</div>
+    </div>
+</body>
+</html>
