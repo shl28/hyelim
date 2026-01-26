@@ -1,0 +1,33 @@
+ *{margin: 0;padding: 0;}
+.cf::after{
+    content: '';
+    display: block;
+    clear: both;
+}
+body{font-size: 12px; font-family: "굴림",Gulim; margin: 10px;}
+.container{
+    width: 500px;
+    padding: 10px;
+    background: #fdd;
+    border: 5px solid #caa;
+    /* height: 200px; 1번 방법 */
+    /* overflow: hidden; 2번 방법 */
+
+}
+h1{
+    text-align: center;
+    padding: 10px;
+}
+p{text-align: justify;}
+.green{
+    float: left;
+    width: 200px;
+    padding: 15px;
+    background-color: #dda;
+}
+.coffee{
+    float: right;
+    width: 200px;
+    padding: 15px;
+    background-color: #ba7;
+}
