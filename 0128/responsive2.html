@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- 반응형 할때 무조건 써야 함, 기기감지 해줌 -->
+    <!-- 모바일, 패드, pc 등 기기 감지 없으면 pc 용으로만 나옴 -->
+    <title>Document</title>
+<style>
+.box1{
+    width: 200px;
+    height: 200px;
+    border: 1px solid #333;
+}
+@media screen and (max-width: 600px){
+    /* 최대 크기가 600이하 핸드폰용 */
+    .box1{
+        background-color: blue;
+    }
+}
+@media screen and (min-width: 601px) and (max-width: 1023px){
+    /* 최소가 601 최대 1023 이하 스마트 패드 */
+    .box1{
+        background-color: red;
+    }
+}
+@media screen and (min-width:1024px){
+    /* pc용 최대 미디어 쿼리 */
+    .box1{
+        background-color: green;
+    }
+}
+</style>
+</head>
+<body>
+    <div class="box box1"></div>
+</body>
+</html>
