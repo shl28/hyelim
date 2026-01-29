@@ -45,6 +45,12 @@ public class LambdaExample {
         // 3. 학생 이름만 추출
         List<String> names = students.stream().map(Student::getName).collect(Collectors.toList());
         System.out.println("\n학생 이름 목록: " + names);
+        // stream - 데이터의 흐름
+        // list - stream 생성 -> 가공(필터/변환) -> 결과를 출력
+        // 데이터를 저장하지 않음
+        // 원본 collection (students) 변경하지 않음
+        // 한번 사용하면 다시 사용 불가
+        // 컬렉션.stream().중간연산().중간연산().최종연산();
 
         // 4. 평균 점수 계산
         double average = students.stream().mapToInt(Student::getScore).average().orElse(0.0);
