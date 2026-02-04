@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        let colors = ["#f8b195", "#f67280", "#c06c84", "#6c5b7b", "#355c7d"];
+        let index = 0;
+        function changeBodyBg(){
+            document.body.style.backgroundColor = colors[index];
+            index++;
+            if(index >= colors.length){
+                index = 0;
+            }
+        }
+    </script>
+</head>
+<body>
+    <button onclick="changeBodyBg()">배경색 변경</button>    
+</body>
+</html>
