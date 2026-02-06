@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {box-sizing: border-box;}
+        .container {
+            width: 400px;
+            height: 280px;
+            border: 1px solid black;
+        }
+        .tab-container {
+            display: flex;
+            font-weight: bold;
+        }
+        .tab{
+            flex: 1;
+            width: 200px;
+            padding: 10px;
+            border-right: 1px solid black;
+            border-bottom: 1px solid black;
+            text-align: center;
+        }
+        #menutab2 {
+            border-right: none;
+        }
+        .tab.active-tab {
+            border-bottom: none;
+        }
+        .tab-content{
+            display: none;
+        }
+        .tab-content .line {
+            border-bottom: 1px solid black;
+        }
+        .tab-content.active-content {
+            display: block;
+        }
+        .tab-content.active-content p {
+            font-weight: bold;
+        }
+        .tab-content.tc1.active-content {
+            margin-top: 5px;
+            display: flex;
+            flex-direction: column;
+        }
+        .tab-content.tc1.active-content .line{
+            flex: 1;
+            display: flex;
+            justify-content: space-between;
+        }
+        .tab-content.tc2.active-content {
+            margin-top: 5px;
+            display: flex;
+            justify-content: space-around;
+            gap: 5px;
+        }
+        .tab-content.tc2.active-content img{
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="tab-container">
+            <div id="menutab1" class="tab active-tab" onclick="changeTab('tab1')">공지사항</div>
+            <div id="menutab2" class="tab" onclick="changeTab('tab2')">갤러리</div>
+        </div>
+        <div class="subtab-container">
+            <div id="tab1" class="tab-content tc1 active-content">
+                <div class="line line1">
+                    <p class="txt">네번째 공지사항입니다.</p>
+                    <p class="date">2019.05.21</p>
+                </div>
+                <div class="line line2">
+                    <p class="txt">세번째 공지사항입니다.</p>
+                    <p class="date">2019.04.20</p>
+                </div>
+                <div class="line line3">
+                    <p class="txt">두번째 공지사항입니다.</p>
+                    <p class="date">2019.05.21</p>
+                </div>
+                <div class="line line4">
+                    <p class="txt">첫번째 공지사항입니다.</p>
+                    <p class="date">2019.02.25</p>
+                </div>
+            </div>
+            <div id="tab2" class="tab-content tc2">
+                <img src="image/g1.png" alt="">
+                <img src="image/g2.png" alt="">
+                <img src="image/g3.png" alt="">
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function changeTab(tabId) {
+            const allTabs = document.querySelectorAll('.tab');
+            const allContents = document.querySelectorAll('.tab-content');
+
+            allTabs.forEach(function(a){
+                a.classList.remove('active-tab');
+            });
+
+            allContents.forEach(function(a){
+                a.classList.remove('active-content');
+            });
+
+            const selectedTab = document.getElementById('menu' + tabId);
+            selectedTab.classList.add('active-tab');
+
+            const selectedContent = document.getElementById(tabId);
+            selectedContent.classList.add('active-content');
+        }
+    </script>
+</body>
+</html>

@@ -8,7 +8,13 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class FlightManager {
-    private static ArrayList<Flight> flights;  // 항공 정보 저장
+    private static ArrayList<Flight> flights;  // 항공편 정보 하나만 존재 해야해서 static 사용
+
+    // 항공편 목록을 외부에서 접근하는 getter 메서드
+    public static ArrayList<Flight> getFlights() {   // static 메서드
+        return flights;
+    }
+
     private static ArrayList<Passenger> passengers;  // 예약된 승객 정보 저장
 
     // 승객을 키로 하고, 예약된 항공편을 값으로 가지는 맵
@@ -104,20 +110,23 @@ public class FlightManager {
         System.out.println("예매자 정보를 입력하세요.");
         System.out.print("이름 : ");
         String name = sc.next();
-        System.out.printf("생년월일(6자리): ");
-        try {
-            int birthDate = Integer.parseInt(sc.next());
-            Passenger p = new Passenger(name, birthDate);
-            if (!p.man15(p) && flight.getInternationalFlight()) { // 국제선이고 만15세 넘지 않은 경우
-                System.out.println("만 15세 미만은 국제선 예약 불가입니다.");
-            } else {
-                System.out.println("결제 비밀 번호");
-                String pw = sc.next();
-                p = new Passenger(name, birthDate, pw);
-                passengers.add(p);  // 항공 예약 명단에 추가
-            }
-        } catch (DateTimeException e) {
-            System.out.println("생년월일을 6자리로 입력해 주세요 ex) 010225");
+        while (true) {
+            System.out.printf("생년월일(6자리): ");
+           try {
+                int birthDate = Integer.parseInt(sc.next());
+                Passenger p = new Passenger(name, birthDate);
+                if (!p.man15(p) && flight.getInternationalFlight()) { // 국제선이고 만15세 넘지 않은 경우
+                    System.out.println("만 15세 미만은 국제선 예약 불가입니다.");
+                } else {
+                    System.out.println("결제 비밀 번호");
+                    String pw = sc.next();
+                    p = new Passenger(name, birthDate, pw);
+                    passengers.add(p);  // 항공 예약 명단에 추가
+                    break; // 성공했을 때 종료
+                }
+            } catch (DateTimeException e) {
+                System.out.println("생년월일을 6자리로 입력해 주세요 ex) 010225");
+            } 
         }
     }
 
@@ -189,7 +198,7 @@ public class FlightManager {
         }
     }
 
-    private String ticketPrint(Map<String,Flight> reservationMap, String name) {
+    String ticketPrint(Map<String,Flight> reservationMap, String name) {
         int index = -1;
 
         if (passengers != null) {
@@ -208,6 +217,12 @@ public class FlightManager {
                 "." + reservationMap.get(name) + "\n\n" +
                 "ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ";
 
+    }
+
+    public void ticketSave() {
+        int index = search("티켓조회");
+        checkPassword(index);
+        fc.ticketSaveFile(reservationMap, passengers.get(index).getName());
     }
 
 }
