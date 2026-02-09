@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            width: 1200px;
+            margin: 0 auto;
+        }
+        header {
+            width: 100%;
+            max-width: 1200px;
+            height: 100px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .menu {
+
+        }
+        .tab-container{
+            display: flex;
+        }
+        .tab {
+            cursor: pointer;
+            /* padding: 10px;
+            border: 1px solid #ccc;
+            margin-right: 5px; */
+        }
+        /* .tab.active-tab {
+            border-color: #000;
+            background-color: blueviolet;
+            color: #fff;
+        } */
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active-content {
+            display: block;
+        }
+        .slide-container {
+            width: 100%;
+            max-width: 1200px;
+            height: 300px;
+            position: relative;
+        }
+        .slider {
+            height: 100%;
+        }
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            transition: opacity 3s ease;
+        }
+        .slide img {
+            width: 1200px;
+            height: 300px;
+            display: block;
+            object-fit: cover;
+        }
+        .slide.active {
+            opacity: 1;
+        }
+    </style>
+<body>
+    <header>
+        <h1>강원천문대</h1>
+            <div class="tab-container">
+                <div id="menutab1" class="tab active-tab">강원천문대</div>
+                <div id="menutab2" class="tab">천문대예약</div>
+                <div id="menutab3" class="tab">천문대예약</div>
+                <div id="menutab4" class="tab">커뮤니티</div>
+            </div>
+
+            <div id="tab1" class="tab-content active-content">
+                <p>천문대 소개</p>
+                <p>인사말</p>
+                <p>오시는 길</p>
+            </div>
+
+            <div id="tab2" class="tab-content">
+                <p>프로그램</p>
+                <p>관람시간표</p>
+                <p>이달의 별자리</p>
+            </div>
+
+            <div id="tab3" class="tab-content">
+                <p>예약하기</p>
+                <p>예약확인</p>
+                <p>예약취소</p>
+            </div>
+            
+            <div id="tab4" class="tab-content">
+                <p>공지사항</p>
+                <p>방문후기</p>
+                <p>자유게시판</p>
+            </div>
+    </header>
+    <div class="slide-container">
+        <div class="slider">
+            <div class="slide active"><img src="images/fade1.jpg" alt=""></div>
+            <div class="slide"><img src="images/fade2.jpg" alt=""></div>
+            <div class="slide"><img src="images/fade3.jpg" alt=""></div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+    const allTabs = document.querySelectorAll('.tab');
+    const allContents = document.querySelectorAll('.tab-content');
+
+    allTabs.forEach(function(tab, index) {
+        // 1. 각 탭에 마우스를 올렸을 때(mouseover) 이벤트 추가
+        tab.addEventListener('mouseover', function() {
+            
+            // 2. 모든 탭과 콘텐츠의 활성화 클래스 제거 (초기화)
+            allTabs.forEach(t => t.classList.remove('active-tab'));
+            allContents.forEach(c => c.classList.remove('active-content'));
+
+            // 3. 현재 마우스가 올라간 탭에 클래스 추가
+            tab.classList.add('active-tab');
+
+            // 4. 인덱스 번호가 같은 콘텐츠를 활성화
+            allContents[index].classList.add('active-content');
+        });
+    });
+
+    const slides = document.querySelectorAll('.slide');
+
+    let index = 0;
+
+    function fadePic(){
+        slides[index].classList.remove('active');
+
+        index++;
+
+        if(index >= slides.length) {
+            index = 0;
+        }
+
+        slides[index].classList.add('active');
+    }
+
+    setInterval(fadePic, 3000);
+
+</script>

@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      // stack : push, pop 
+      let fruits = ["사과", "바나나"];
+      fruits.push("딸기");
+      console.log(fruits);
+    
+      let removed = fruits.pop();
+      console.log(removed);
+      console.log(fruits);
+
+      let stack = [];
+
+      stack.push(10);
+      stack.push(20);
+      stack.push(30);
+
+      console.log(stack); // [10, 20, 30]
+
+      let value = stack.pop();
+      console.log(value); // 30
+      console.log(stack); // [10, 20]
+
+    </script>
+  </body>
+</html>

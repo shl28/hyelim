@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            width: 1200px;
+            margin: 0 auto;
+        }
+        header {
+            width: 100%;
+            max-width: 1200px;
+            height: 100px;
+        }
+        .slide-container {
+            width: 100%;
+            max-width: 1200px;
+            height: 300px;
+            position: relative;
+        }
+        .slider {
+            height: 100%;
+        }
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            transition: opacity 3s ease;
+        }
+        .slide img {
+            width: 1200px;
+            height: 300px;
+            display: block;
+            object-fit: cover;
+        }
+        .slide.active {
+            opacity: 1;
+        }
+    </style>
+<body>
+    <header></header>
+    <div class="slide-container">
+        <div class="slider">
+            <div class="slide active"><img src="images/fade1.jpg" alt=""></div>
+            <div class="slide"><img src="images/fade2.jpg" alt=""></div>
+            <div class="slide"><img src="images/fade3.jpg" alt=""></div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+
+    const slides = document.querySelectorAll('.slide');
+
+    let index = 0;
+
+    function fadePic(){
+        slides[index].classList.remove('active');
+
+        index++;
+
+        if(index >= slides.length) {
+            index = 0;
+        }
+
+        slides[index].classList.add('active');
+    }
+
+    setInterval(fadePic, 3000);
+
+</script>

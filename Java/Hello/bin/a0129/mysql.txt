@@ -1,0 +1,35 @@
+3.1 필드 추가 하기
+Alter table 테이블명 add 새로운_필드명 필드_데이터형 [first 또는 after 필드명]
+alter table mem add post_num char(20);
+
+3.2 필드 삭제 하기
+Alter table 테이블명 drop  삭제할_필드명1, 삭제할_필드명2;
+ Alter table mem drop post_num;
+
+
+
+3.3 필드 수정
+Alter table 테이블명 change 수정할_필드명 새로운_필드명 필드_데이터형
+Alter table mem change tel phone char(20);
+
+3.4. 필드 데이터형 수정하기
+Alter table 테이블명 modify 필드명 수정할_데이터형
+Alter table mem modify phone int
+
+4. 데이터베이스 테이블 이름 관리
+이미 존재하는 DB 테이블 이름을 변경하는 명령
+alter table 수정할_데이블명 rename 새로운_테이블명;
+
+mem 테이블의 이름을 mem2로 변경.
+alter table mem rename mem2;
+
+데이터베이스 테이블 삭제
+drop table 테이블명
+
+mem2 테이블을 삭제하는 명령.
+drop table mem2;
+
+====
+my_database -> 데이터베이스 만들고
+
+my_database 사용 -> use 사용
