@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    *{padding: 0; margin: 0;}
+    ul{list-style: none;}
+    a{text-decoration: none;}
+    header{
+        width: 1200px;
+        height: 200px;
+        margin: 0 auto;
+        background-color: #ccc;
+    }
+    #img_slide{
+        position: relative;
+        width: 1200px;
+        height: 300px;
+        margin: 0 auto;
+        overflow: hidden;
+    }
+    
+    #img_slide ul{
+        width: 4800px;
+        height: 300px;
+    }
+
+    #img_slide ul li{
+        width: 1200px;
+        float: left;
+    }
+
+    #img_slide p a{
+        position: absolute;
+        width: 38px;
+        height: 36px;
+        top: 40%;
+    }
+
+    #img_slide p a.prev{
+        left: 20px;
+    }
+
+    #img_slide p a.next{
+        right: 20px;
+    }
+</style>
+<body>
+    <header></header>
+    <div id="img_slide">
+        <ul id="banner">
+            <li><a href="#"><img src="images/slide1.jpg" alt=""></a></li>
+            <li><a href="#"><img src="images/slide2.jpg" alt=""></a></li>
+            <li><a href="#"><img src="images/slide3.jpg" alt=""></a></li>
+        </ul>
+        <p>
+            <a class="prev" href="#">
+                <img src="images/prev_btn.png" alt="">
+            </a>
+            <a class="next" href="#">
+                <img src="images/next_btn.png" alt="">
+            </a>
+        </p>
+    </div>
+    <script>
+        let list = document.querySelector('#banner');
+        let listLi = document.querySelectorAll('#banner li');
+        let total = listLi.length;
+        // let li_length = 1200;
+        let li_length = document.querySelector("#banner > li").offsetWidth;
+        let copyObj = listLi[0].cloneNode(true);
+        let num = 0;
+        let intervalId;
+
+        list.append(copyObj);
+        document.querySelector('.next').addEventListener("click",function(e){
+            e.preventDefault();
+            clearInterval(intervalId);
+            
+            if(num == total){
+                num = 0;
+                list.style.transition = 'none';
+                list.style.marginLeft = 0;
+            }
+            setTimeout(function(){
+                num++;
+                list.style.transition = 'margin-left 0.5s';
+                list.style.marginLeft = -li_length * num + "px";
+            },50);
+
+            restartPlay();
+        });
+
+        document.querySelector('.prev').addEventListener("click",function(e){
+            e.preventDefault();
+            clearInterval(intervalId);
+            
+            if(num == 0){
+                num = total;
+                list.style.transition = 'none';
+                list.style.marginLeft = -li_length * num + "px";
+            }
+            setTimeout(function(){
+                num--;
+                list.style.transition = 'margin-left 0.5s';
+                list.style.marginLeft = -li_length * num + "px";
+            },50);
+
+            restartPlay();
+        });
+
+        function autoplay(){
+            if(num == total){
+                num = 0;
+                list.style.transition = 'none';
+                list.style.marginLeft = 0;
+            }
+            setTimeout(function(){
+                num++;
+                list.style.transition = 'margin-left 0.5s';
+                list.style.marginLeft = -li_length * num + "px";
+            },50);
+        }
+
+        intervalId = setInterval(autoplay,3000);
+
+        function restartPlay(){
+            intervalId = setInterval(autoplay,3000);
+        }
+    </script>
+</body>
+</html>
+<!-- 
+    전체 사진 갯수 
+    사진한장 1200
+    맨앞의 사진 한장을 복사해서 이동하면됨
+-->
