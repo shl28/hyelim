@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+    body {
+        background: #252422;
+    }
+    div {
+        width: 395px;
+        height: 160px;
+        margin: 50px auto;
+        overflow: hidden;
+    }
+    dl {
+        width: 395px;
+        height: 160px;
+    }
+    dt {
+        width: 25px;
+        height: 160px;
+        float: left;
+    }
+    dt span {
+        display: block;
+        width: 100%;
+        height: 100%;
+        text-indent: -9999px;
+    }
+    dt span.over {
+        cursor : pointer;
+    }
+    dt span.selected {
+        cursor : default;
+    }
+    dd {
+        width: 320px;
+        height: 160px;
+        float: left;
+        background: #d4d0c8;
+        overflow: hidden;
+        transition: width 0.5s ease;
+    }
+    dd img {
+        float: left;
+        width: 320px;
+        height: 160px;
+    }
+    dt {
+        background: url(images/blue01.png) no-repeat 0 0;
+    }
+    dt span.over {
+        background: url(images/pink01.png) no-repeat 0 0;
+    }
+    dt span.selected {
+        background: url(images/orange01.png) no-repeat 0 0;
+    }
+</style>
+<body>
+    <div>
+        <dl>
+            <dt><span>step</span></dt>
+            <dd><img src="images/menuimg01.jpg" alt=""></dd>
+            <dt><span>step</span></dt>
+            <dd><img src="images/menuimg02.jpg" alt=""></dd>
+            <dt><span>step</span></dt>
+            <dd><img src="images/menuimg03.jpg" alt=""></dd>
+        </dl>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            let dtList = document.querySelectorAll('dt');
+            let ddList = document.querySelectorAll('dd');
+            let dtListSpan = document.querySelectorAll('dt span');
+
+            for(let i = 1; i < ddList.length; i++) {
+                ddList[i].style.width = '0';
+            }
+
+            dtListSpan[0].classList.add('selected');
+
+            dtList.forEach((dt) => {
+                dt.addEventListener('click', function(){
+                    var nextDd = this.nextElementSibling;
+
+                    if(nextDd.style.width === '0px' || nextDd.style.width === '') {
+                        ddList.forEach((dd) => {
+                            dd.style.width = '0px';
+                        });
+                    }
+                    nextDd.style.width = '320px';
+
+                    dtListSpan.forEach((dtSpan) => {
+                        dtSpan.classList.remove('selected');
+                    });
+                    this.querySelector('span').classList.add('selected');
+                });
+
+                dt.addEventListener('mouseover', function(){
+                    dtListSpan.forEach((dtSpan) => {
+                        dtSpan.classList.remove('over');
+                    });
+                    this.querySelector('span').classList.add('over');
+                });
+            });
+
+        });
+    </script>
+</body>
+</html>

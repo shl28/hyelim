@@ -82,5 +82,17 @@ public class User {
         reservationNumbers.clear();
     }
 
+    public void removeReservationsByMovie(String title) {
+        for(int i = reservedMovies.size() - 1; i >= 0; i--) {
+            if (reservedMovies.get(i).equalsIgnoreCase(title)) {
+                reservedMovies.remove(i);
+                reservedSeats.remove(i);
+                reservationNumbers.remove(i);
+            }
+        }
+        // list 삭제 시 i가 0부터 증가하는 경우 삭제될때마다 인덱스번호 당겨지면서 문제 발생 가능
+        // 삭제 시 list 맨뒤에서 부터 (list.size - 1) -> 0 순서로 도는게 안전
+        // reservedMovies.removeIf(movie -> movie.equals(title));  가장 깔끔 안전
+    }
     
 }
