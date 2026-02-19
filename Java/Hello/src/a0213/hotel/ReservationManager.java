@@ -62,11 +62,11 @@ public class ReservationManager {
                 user.addTotalPaid(finalPrice);
             }
         } else {
-            System.out.println("이미 예약된 좌석입니다.");
+            System.out.println("이미 예약된 호실입니다.");
         }
     }
 
-    private Hotel getHotel(String hotelName) {
+    public Hotel getHotel(String hotelName) {
         for(Hotel hotel : hotels){
             if (hotel.getName().equalsIgnoreCase(hotelName)) {
                 return hotel;
@@ -91,14 +91,14 @@ public class ReservationManager {
         User user = getUser(userName);
 
         if (user == null) {
-            user = new User(hotelName);
+            user = new User(userName);
             users.add(user);
         }
         user.addReservation(hotelName, roomNumber);
         return true;
     }
 
-    private User getUser(String userName) {
+    public User getUser(String userName) {
         for(User user : users){
             if (user.getName().equalsIgnoreCase(userName)) {
                 return user;
@@ -113,8 +113,9 @@ public class ReservationManager {
         User user = getUser(userName);
 
         if (user != null && !user.getReservedHotels().isEmpty()) {
-            for(User userReserve : users) {
-                System.out.println(userReserve);
+            for (int i = 0; i < user.getReservationNumbers().size(); i++) {
+                System.out.println("예약번호: " + user.getReservationNumbers().get(i) + " | 호텔 : " + user.getReservedHotels().get(i)
+                + " | 방 번호 : " + user.getReservedRooms().get(i));
             }
             System.out.println("총 결제 금액 : " + user.getTotalPaid() + "원");
         } else {
@@ -122,8 +123,6 @@ public class ReservationManager {
         }
     }
 
-    // TODO: cancelReservation() 구현
-    // 예약 번호로 특정 예약 취소
     public void cancelReservation() {
         System.out.print("사용자 이름 입력 : ");
         String userName = sc.nextLine();
@@ -136,7 +135,7 @@ public class ReservationManager {
 
         user.showReservations();
 
-        System.out.println("취소할 예약 번호를 입력하세요 : ");
+        System.out.print("취소할 예약 번호를 입력하세요 : ");
         int reservationNumber = sc.nextInt();
         sc.nextLine();
 
@@ -147,34 +146,242 @@ public class ReservationManager {
         }
 
         String hotelName = user.getReservedHotels().get(index);
-        int roomMumber = user.getReservedRooms().get(index);
+        int roomNumber = user.getReservedRooms().get(index);
 
         Hotel hotel = getHotel(hotelName);
         if (hotel != null) {
-            hotel.getRoom().cancleRoom(roomMumber);
+            hotel.getRoom().cancleRoom(roomNumber);
 
-            System.out.println("호텔 [" + hotelName + "] 좌석 [" + roomMumber + "] 예약이 취소되었습니다.");
+            System.out.println("호텔 [" + hotelName + "] 좌석 [" + roomNumber + "] 예약이 취소되었습니다.");
+        }
+
+        int price = hotel.getPrice();
+        if (user != null) {
+            user.minusTotalPaid(price);
+        }
+
+        user.cancelReservation(hotelName, roomNumber);
+    }
+
+    public void cancelAllReservation() {
+        System.out.print("사용자 이름 입력 : ");
+        String userName = sc.nextLine();
+        User user = getUser(userName);
+
+        if (user == null || user.getReservedHotels().isEmpty()) {
+            System.out.println(userName + "님은 예약된 내역이 없습니다.");
+            return;
+        }
+
+        ArrayList<String> hotels = new ArrayList<>(user.getReservedHotels());
+        ArrayList<Integer> rooms = new ArrayList<>(user.getReservedRooms());
+        ArrayList<Integer> numbers = new ArrayList<>(user.getReservationNumbers());
+
+        for(int i = 0; i < hotels.size(); i++) {
+            String hotelName = hotels.get(i);
+            int roomNumber = rooms.get(i);
+            int reservationNumber = numbers.get(i);
+
+            Hotel hotel = getHotel(hotelName);
+
+            int price = hotel.getPrice();
+            if (user != null) {
+                user.minusTotalPaid(price);
+            }
+
+            if (hotel != null) {
+                hotel.getRoom().cancleRoom(reservationNumber);
+                System.out.println("[" + reservationNumber + "] 호텔 [" + hotelName + "] 방번호 [" + roomNumber + "] 취소 완료");
+            }
+        }
+
+        user.clearReservations();
+
+        System.out.println(userName + "님의 모든 예약이 취소되었습니다.");
+    }
+
+    public void printTicket() {
+        System.out.println("\n==== 티켓 출력 ====");
+        System.out.print("예약 번호를 입력하세요 : ");
+
+        int reservationNum = -1;
+
+        try {
+            reservationNum = Integer.parseInt(sc.nextLine());
+        } catch (NumberFormatException e) {
+            System.out.println("숫자를 입력하세요.");
+        }
+
+        if (reservationNum != -1) {
+            if (ticket == null) {
+                ticket = new ReservationTicket(this);
+            }
+            ticket.printTicket(reservationNum);
         }
     }
 
-    // TODO: cancelAllReservation() 구현
-    // 사용자의 모든 예약 취소
+    public String getReservationDetails(int reservationNum) {
+        for(User user : users) {
+            if (user.getReservationNumbers().contains(reservationNum)) {
+                int index = user.getReservationNumbers().indexOf(reservationNum);
+                return "예약번호 : " + user.getReservationNumbers().get(index) + " | 호텔 : " + user.getReservedHotels().get(index) + " | 방번호 : " + user.getReservedRooms().get(index);
+            }
+        }
+        return null;
+    }
 
-    // TODO: printTicket() 구현
-    // 예약 번호 입력받아 티켓 출력
+    public void deleteHotel(Scanner sc) {
+        System.out.print("삭제할 호텔명을 입력하세요 : ");
+        String hotelName = sc.nextLine();
+        Hotel hotel = getHotel(hotelName);
 
-    // TODO: getReservationDetails(int reservationNum) 구현
-    // 예약 번호로 예약 정보 문자열 반환
+        if (hotel != null) {
+            for(User user : users) {
+                ArrayList<String> reservedHotels = user.getReservedHotels();
 
-    // TODO: deleteHotel(Scanner sc) 구현
-    // 호텔 삭제 (해당 호텔의 모든 예약도 함께 취소)
+                if (reservedHotels.contains(hotelName)) {
+                    ArrayList<Integer> reservationNums = new ArrayList<>(user.getReservationNumbers());
 
-    // TODO: modifyHotelInfo(Scanner sc) 구현
-    // 호텔 정보 수정 (모든 예약 취소 후 수정)
+                    for(int i = 0; i < reservationNums.size(); i++) {
+                        if (user.getReservedHotels().get(i).equalsIgnoreCase(hotelName)) {
+                            int roomNumber = user.getReservedRooms().get(i);
+                            hotel.getRoom().cancleRoom(roomNumber);
+                            int price = hotel.getPrice();
+                            if (user != null) {
+                                user.minusTotalPaid(price);
+                            }
+                            System.out.println("[" + reservationNums.get(i) + "] 예약이 취소 되었습니다.");
+                        }
+                    }
+                    user.removeReservationsByHotel(hotelName);
+                }
+            }
+            hotels.remove(hotel);
+            System.out.println("[" + hotelName + "] 호텔이 삭제되었습니다.");
+        } else {
+            System.out.println("해당 호텔이 존재하지 않습니다.");
+        }
+    }
 
-    // TODO: setDiscountRate(Scanner sc) 구현
-    // 할인율 설정
+    public void modifyHotelInfo(Scanner sc) {
+        System.out.print("수정할 호텔명을 입력하세요 : ");
+        String hotelName = sc.nextLine();
+        Hotel hotel = getHotel(hotelName);
 
-    // TODO: getDiscountRate() 구현
-    // 할인율 반환
+        if (hotel == null) {
+            System.out.println("해당 호텔은 없습니다.");
+            return;
+        }
+
+        System.out.println("현재 정보 : " + hotel.getName() + ", " + hotel.getLocation() + ", " + hotel.getPrice() + "원");
+        System.out.println("수정할 정보를 입력하세요. 입력하지 않을 경우 기존 정보가 유지됩니다.");
+
+        for(User user : users) {
+            ArrayList<String> reservedHotels = user.getReservedHotels();
+
+            if (reservedHotels.contains(hotelName)) {
+                ArrayList<Integer> reservationNumbers = new ArrayList<>(user.getReservationNumbers());
+
+                for(int i = 0; i <reservationNumbers.size(); i++) {
+                    if (user.getReservedHotels().get(i).equalsIgnoreCase(hotelName)) {
+                        int roomNumber = user.getReservedRooms().get(i);
+                        hotel.getRoom().cancleRoom(roomNumber);
+                        int price = hotel.getPrice();
+                    if (user != null) {
+                        user.minusTotalPaid(price);
+                    }
+                        System.out.println("[" + reservationNumbers.get(i) + "] 예약이 취소되었습니다.");
+                    }
+                }
+
+                user.removeReservationsByHotel(hotelName);
+            }
+        }
+
+        System.out.print("새 호텔명 : ");
+        String newHotelName = sc.nextLine();
+
+        if (newHotelName.isEmpty()) {
+            newHotelName = hotel.getName();
+        }
+
+        System.out.print("새 위치 : ");
+        String newLocation = sc.nextLine();
+
+        if (newLocation.isEmpty()) {
+            newLocation = hotel.getLocation();
+        }
+
+        System.out.print("새 가격 : ");
+        String priceInput = sc.nextLine();
+        int newPrice = 0;
+
+        try {
+            if (priceInput.trim().isEmpty()) {
+                newPrice = hotel.getPrice();
+            } else {
+                newPrice = Integer.parseInt(priceInput);
+            }
+        } catch (Exception e) {
+            System.out.println("잘못된 입력입니다. 가격은 숫자로 입력해주세요.");
+        }
+
+        System.out.print("새 방 수 : ");
+        String roomInput = sc.nextLine();
+        int newRooms = 0;
+
+        try {
+            if (roomInput.trim().isEmpty()) {
+                newRooms = hotel.getRoom().getAvailableRooms();
+            } else {
+                newRooms = Integer.parseInt(roomInput);
+            }
+
+            if (newRooms == 0) {
+                newRooms = hotel.getRoom().getAvailableRooms();
+            }
+        } catch (Exception e) {
+            System.out.println("잘못된 입력입니다. 숫자로 입력해주세요.");
+            return;
+        }
+
+        Hotel updateHotel = new Hotel(newHotelName, newLocation, newPrice, newRooms);
+        hotels.remove(hotel);
+        hotels.add(updateHotel);
+
+        System.out.println("호텔 정보가 수정되었습니다.");
+    }
+
+    public void setDiscountRate(Scanner sc) {
+        System.out.println("현재 할인율 " + discountRate + "%");
+        System.out.print("설정할 할인율(%)을 입력하세요 : ");
+
+        try {
+            discountRate = Integer.parseInt(sc.nextLine());
+            System.out.println("할인율이 " + discountRate + "%로 설정되었습니다.");
+        } catch (Exception e) {
+            System.out.println("잘못된 입력입니다.");
+        }
+    }
+
+    public int getDiscountRate() {
+        return discountRate;
+    }
+
+    public void addHotel() {
+        System.out.print("추가할 호텔 명을 입력하세요 : ");
+        String newHotelName = sc.nextLine();
+        System.out.print("추가할 호텔 위치를 입력하세요 : ");
+        String newLocation = sc.nextLine();
+        System.out.print("추가할 호텔 가격을 입력하세요 : ");
+        int newPrice = Integer.parseInt(sc.nextLine());
+        System.out.print("추가할 호텔 방개수를 입력하세요 : ");
+        int newRoomCounts = Integer.parseInt(sc.nextLine());
+
+        Hotel hotel = new Hotel(newHotelName, newLocation, newPrice, newRoomCounts);
+        hotels.add(hotel);
+
+        System.out.println(newHotelName + " 호텔 추가가 완료되었습니다.");
+    }
+
 }

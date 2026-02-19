@@ -93,7 +93,7 @@ public class MovieReservationMain {
         System.out.print("운영자 비밀번호를 입력하세요 : ");
         String password = sc.nextLine();
         // 예시
-        if (!password.equalsIgnoreCase("admin123")) {
+        if (!password.equals("admin123")) {
             System.out.println("비밀번호가 틀렸습니다.");
             return;
         }
@@ -115,9 +115,9 @@ public class MovieReservationMain {
                     break;
 
                 case "2":
-                ticket.updateMovieList();
-                System.out.println("영화 목록이 갱신되었습니다.");
-                break;
+                    ticket.updateMovieList();
+                    System.out.println("영화 목록이 갱신되었습니다.");
+                    break;
 
                 case "3":
                     reservationManager.showMovies();

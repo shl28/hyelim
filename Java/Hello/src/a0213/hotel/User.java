@@ -8,7 +8,8 @@ public class User {
     private ArrayList<String> reservedHotels;       
     private ArrayList<Integer> reservedRooms;        
     private static int reservationCounter = 1;      
-    private int totalPaid = 0;              
+    private int totalPaid = 0; 
+             
 
     public User(String name) {
         this.name = name;
@@ -52,28 +53,42 @@ public class User {
         
     }
 
-    @Override
-    public String toString() {
-        return "예약번호: " + reservationNumbers + " | 호텔 : " + reservedHotels
-                + " | 방 번호 : " + reservedRooms;
+    public void minusTotalPaid(int amount) {
+        totalPaid -= amount;
+        
     }
 
     public void showReservations() {
         System.out.println("\n==== 예약 내역 ====" );
         for(int i = 0; i < reservedHotels.size(); i++){
-            System.out.println("예약번호 : " + reservationNumbers.get(i) + " | 호텔 : " + reservedHotels.get(i) + " | 방번호 : " + reservedRooms);
+            System.out.println("예약번호 : " + reservationNumbers.get(i) + " | 호텔 : " + reservedHotels.get(i) + " | 방번호 : " + reservedRooms.get(i));
         }
     }
-    
 
-    // TODO: cancelReservation(String hotelName, int roomNumber) 구현
-    // 특정 호텔의 특정 방 예약 취소
+    public void cancelReservation(String hotelName, int roomNumber) {
+        int index = reservedHotels.indexOf(hotelName);
 
-    // TODO: clearReservations() 구현
-    // 모든 예약 내역 초기화
+        if (index != -1 && reservedRooms.get(index) == roomNumber) {
+            reservedHotels.remove(index);
+            reservedRooms.remove(index);
+            reservationNumbers.remove(index);
+        }
+    }
 
-    // TODO: removeReservationsByHotel(String hotelName) 구현
-    // 특정 호텔의 모든 예약 취소
-    // 주의: 뒤에서부터 삭제해야 인덱스 오류 방지}
+    public void clearReservations() {
+        reservedHotels.clear();
+        reservedRooms.clear();
+        reservationNumbers.clear();
+    }
+
+    public void removeReservationsByHotel(String hotelName) {
+        for(int i = reservedHotels.size() - 1; i >= 0; i--) {
+            if (reservedHotels.get(i).equalsIgnoreCase(hotelName)) {
+                reservedHotels.remove(i);
+                reservedRooms.remove(i);
+                reservationNumbers.remove(i);
+            }
+        }
+    }
 
 }

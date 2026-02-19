@@ -9,7 +9,7 @@ public class Room {
         rooms = new ArrayList<>();
 
         for(int i = 0; i < roomCount; i++){
-            rooms.add((roomCount + 1) + "");
+            rooms.add((i + 1) + "");
         }
     }
 
@@ -26,7 +26,7 @@ public class Room {
     }
 
     public void displayRooms() {
-        System.out.println("\n==== 방 목록 ====");
+        System.out.println("\n==== 방 목록 ==== (예약된 호실 : X)");
 
         for(int i = 0; i < rooms.size(); i++) {
             System.out.printf("%2s ", rooms.get(i));
@@ -46,12 +46,10 @@ public class Room {
         return false;
     }
 
-        // TODO: cancelRoom(int roomNumber) 구현
-    // 방 예약 취소 (해당 방 번호를 원래 번호로 복원)}
-
-    public void cancleRoom(int roomMumber) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'cancleRoom'");
+    public void cancleRoom(int roomNumber) {
+        if (roomNumber > 0 && roomNumber <= rooms.size() && rooms.get(roomNumber - 1).equalsIgnoreCase("X")) {
+            rooms.set(roomNumber - 1, String.valueOf(roomNumber));
+        }
     }
 
 }
