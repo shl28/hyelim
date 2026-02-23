@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-4.0.0.js"></script>
+
+    <script>
+        $(function(){
+            // $('#list1 li:nth-child(3)').css('background', 'yellow');
+            $('#list1 li:nth-child(even)').css('background', 'yellow');
+            // li첫번째 1부터 시작 짝수(even), 홀수(odd)
+            $('#list1 li:odd').css('background', 'yellow');
+            // index 0부터 시작 li 첫번째 : 0  -> li 요소 중 홀수 index만 선택 
+            $('#list1 li:even').css('background', 'grey');
+
+            $('#list1 li:first').css('color', 'red');
+            //3.id="list1"인 요소에 <li> 요소중   첫번째 <li>요소만 선택후 폰트색상 적용
+
+            $('#list1 li:last').css('color', 'green');
+            $('#list1 li:eq(1)').css('font-style', 'italic');
+            // eq(1) : 인덱스번호 1번  eq = equal
+            // $('#list1 li').eq(1).css('font-style', 'italic');  => 위와 동일하게 사용 가능
+
+            $('#list1 li:lt(2)').css('border', 'dotted 2px aqua');  // lt => less than   보다 작은 인덱스번호 요소들에 적용
+            $('#list1 li:gt(2)').css('border', 'dotted 2px purple');  // gt => greater than   보다 큰 인덱스번호 요소들에 적용
+            // $('#list1 li').gt(2)  => 사용 안됨
+
+            $("#list2 li:contains('리스트11')").css('color', 'red');
+            $("#list2 li:has('span')").css('color', 'aqua');
+
+            $('#list2 li').find('a').css('background-color', 'red');
+
+            $('.theTitle').html("<a href = '#'>요소 객체 조작 </a>")
+            $('.obj1').text("리스트2");
+
+            $('#list3').append("<li>list_6</li>");
+            //15. id="list3"인 요소에 마지막 위치에 새요소를 추가합니다.
+            $('#list3').prepend("<li>list_1</li>");
+
+            $("<li>insertBefore</li>").insertBefore($('#list3 li').eq(4));           
+            //17. id="list3"인 5번째 li요소(인덱스 번호 : 4) 이전에 새요소를 추가합니다. 
+            $('<li>insertAfter</li>').insertAfter($('#list3 li').eq(5));
+
+            $('.obj1').clone().appendTo('#list3');
+
+            var k = $('#list3 li').eq(1).attr('class');  // getAttribute('class')
+            console.log(k);
+
+            $('#list3 li').eq(0).attr('class', 'obj2');  // setAttribute('class', 'obj2');
+            $('.obj2').css('background-color', 'yellow');
+
+            $('#list3 li').eq(0).addClass('obj3');
+        });
+    </script>
+</head>
+<body>
+    <div id="wrap">
+        <h1>탐색 선택자 및 html조작</h1>
+        <h2>탐색 선택자</h2>
+        <ul id="list1">
+            <li>리스트1</li>
+            <li>리스트2</li>
+            <li>리스트3</li>
+            <li>리스트4</li>
+            <li>리스트5</li>
+            <li>리스트6</li>
+            <li>리스트7</li>
+        </ul>
+        <ul id="list2">
+            <li>리스트8</li>
+            <li class="theObj">리스트9</li>
+            <li><span>리스트10</span></li>
+            <li>리스트11</li>
+            <li><a href="#">리스트12</a></li>
+            <li>리스트13</li>
+            <li>리스트14</li>
+        </ul>
+
+        <h2 class="theTitle">html 조작</h2>
+        <ul id="list3">
+            <li class="obj1">list_2</li>
+            <li>list_3</li>
+            <li>list_4</li>
+            <li>list_5</li>
+        </ul>
+    </div>
+</body>
+</html>
