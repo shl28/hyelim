@@ -61,11 +61,11 @@ ul.bxslider {
   font-size: .85em;
   font-family: Arial;
   font-weight: bold;
-  color: #666;
+  color: #fff;
   padding-top: 20px;
 }
 .bx-wrapper .bx-pager.bx-default-pager a {
-  background: #666;
+  background: #fff;
   text-indent: -9999px;
   display: block;
   width: 10px;
@@ -111,10 +111,10 @@ ul.bxslider {
 .bx-wrapper .bx-controls-direction a {
   position: absolute;
   top: 50%;
-  margin-top: -23px;
+  margin-top: -22.5px;
   outline: 0;
-  width: 22px;  /*화살표 크기*/
-  height: 54px;
+  width: 24px;  /*화살표 크기*/
+  height: 45px;
   text-indent: -9999px;
   z-index: 9999;
 }
