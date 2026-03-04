@@ -1,0 +1,39 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: #000;
+}
+
+dl {
+    width: 800px;
+    margin: 50px auto;
+}
+
+dt{
+    height: 35px;
+    line-height: 35px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #fff;
+    background: url(../images/a1.jpg) no-repeat 0 0;
+    text-indent: 1em;
+    cursor: pointer;
+    transition: all 0.3s;
+
+}
+
+dt.selected {
+    background: url(../images/a3.jpg) no-repeat 0 0;
+}
+
+dd {
+    background-color: #d4d0c8;
+    height: 350px;
+}
+
+dd p {
+    padding: 20px;
+}
