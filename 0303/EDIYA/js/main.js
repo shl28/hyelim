@@ -1,4 +1,21 @@
 $(function(){
+    $(window).scroll(function(){
+        var sct = $(this).scrollTop();  // 현재 스크롤 위치값(스트롤 양)
+        
+        $('.s_Top').text(sct);
+
+        if(sct > 10) {
+            $('.header_top').addClass('fixed');
+            $('.header_middle').addClass('fixed');
+            $('nav').addClass('fixed');
+        } else {
+            $('.header_top').removeClass('fixed');
+            $('.header_middle').removeClass('fixed');
+            $('nav').removeClass('fixed');
+        }
+    });
+    
+
     let slider = $('.bxslider').bxSlider({
         auto: true,
     });
@@ -14,7 +31,18 @@ $(function(){
     });
 
     $('.mobile_tab').click(function(){
-        $('.mobile_nav').addClass('active');
+        if($(this).hasClass('active')) {
+            $(this).removeClass('active');
+            $(this).find('img').attr('src', 'images/ham.png');
+            $(this).css('right', '20px');
+            $('.mobile_nav').removeClass('active');
+            $('.mobile_nav .sub').css('display', 'none');
+        } else {
+            $(this).addClass('active');
+            $(this).find('img').attr('src', 'images/bar.png');
+            $(this).css('right', '250px');
+            $('.mobile_nav').addClass('active');
+        }
     });
 
     $('.mobile_nav > ul > li > a').click(function(){
