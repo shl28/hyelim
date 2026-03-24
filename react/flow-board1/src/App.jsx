@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import KanbanBoard from "./components/KanbanBoard";
 
 const INITIAL_COLUMNS = [
@@ -39,7 +39,7 @@ function App() {
     const [columns] = useState(INITIAL_COLUMNS);
     const [cards, setCards] = useState(INITIAL_CARDS);
 
-    const addCard = (columnId, text) => {
+    const addCard = useCallback((columnId, text) => {
         if (!text.trim()) return;
 
         const newCard = {
@@ -49,9 +49,9 @@ function App() {
             createdAt: Date.now(),
         };
         setCards((prev) => [...prev, newCard]);
-    };
+    }, []);
 
-    const moveCard = (cardId, targetColumnId) => {
+    const moveCard = useCallback((cardId, targetColumnId) => {
         setCards((prev) =>
             prev.map((card) =>
                 card.id === cardId
@@ -59,19 +59,19 @@ function App() {
                     : card,
             ),
         );
-    };
+    }, []);
 
-    const deleteCard = (cardId) => {
+    const deleteCard = useCallback((cardId) => {
         setCards((prev) => prev.filter((card) => card.id !== cardId));
-    };
+    }, []);
 
-    const updateCard = (cardId, newText) => {
+    const updateCard = useCallback((cardId, newText) => {
         setCards((prev) =>
             prev.map((card) =>
                 card.id === cardId ? { ...card, text: newText } : card,
             ),
         );
-    };
+    }, []);
 
     return (
         <div className="app">
