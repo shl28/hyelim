@@ -1,15 +1,15 @@
 import ServiceHeader from "./ServiceHeader";
-// import ServiceList from "../components/services/ServiceList";
-// import ServiceCTA from "../components/services/ServiceCTA";
+import ServiceList from "./ServiceList";
+import ServiceCTA from "./ServiceCTA";
 
 function Services() {
-    return (
-        <>
-            <ServiceHeader />
-            {/* <ServiceList />
-            <ServiceCTA /> */}
-        </>
-    );
+  return (
+    <>
+      <ServiceHeader />
+      <ServiceList />
+      <ServiceCTA />
+    </>
+  );
 }
 
 export default Services;
