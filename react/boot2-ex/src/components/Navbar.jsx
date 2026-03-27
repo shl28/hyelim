@@ -1,46 +1,63 @@
 import React from "react";
+import { Link, useLocation } from "react-router-dom";
 
 function Navbar() {
+    const location = useLocation();
+
     return (
-        <>
-            <nav className="navbar navbar-expand-lg navbar-dark bg-primary sticky-top shadow-sm">
-                <div className="container">
-                    <a className="navbar-brand fw-bold" href="#">
-                        Boot2
-                    </a>
-                    <button
-                        className="navbar-toggler"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target="#mainNav"
-                        aria-controls="mainNav"
-                        aria-expanded="false"
-                        aria-label="메뉴"
-                    >
-                        <span className="navbar-toggler-icon"></span>
-                    </button>
-                    <div className="collapse navbar-collapse" id="mainNav">
-                        <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
-                            <li className="nav-item">
-                                <a className="nav-link active" href="/">
-                                    홈
-                                </a>
-                            </li>
-                            <li className="nav-item">
-                                <a className="nav-link" href="/services">
-                                    서비스
-                                </a>
-                            </li>
-                            <li className="nav-item">
-                                <a className="nav-link" href="/contact">
-                                    문의
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
+        <nav className="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm py-2">
+            <div className="container">
+                <Link className="navbar-brand fw-bold text-primary" to="/">
+                    Boot2
+                </Link>
+                <button
+                    className="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#mainNav"
+                >
+                    <span className="navbar-toggler-icon"></span>
+                </button>
+                <div className="collapse navbar-collapse" id="mainNav">
+                    <ul className="navbar-nav ms-auto gap-lg-4">
+                        <li className="nav-item">
+                            <Link
+                                className={`nav-link ${
+                                    location.pathname === "/" ? "active" : ""
+                                }`}
+                                to="/"
+                            >
+                                홈
+                            </Link>
+                        </li>
+                        <li className="nav-item">
+                            <Link
+                                className={`nav-link ${
+                                    location.pathname === "/services"
+                                        ? "active"
+                                        : ""
+                                }`}
+                                to="/services"
+                            >
+                                서비스
+                            </Link>
+                        </li>
+                        <li className="nav-item">
+                            <Link
+                                className={`nav-link ${
+                                    location.pathname === "/contact"
+                                        ? "active"
+                                        : ""
+                                }`}
+                                to="/contact"
+                            >
+                                문의
+                            </Link>
+                        </li>
+                    </ul>
                 </div>
-            </nav>
-        </>
+            </div>
+        </nav>
     );
 }
 
