@@ -101,6 +101,58 @@ app.post("/api/auth/login", async (req, res) => {
     }
 });
 
+app.post("/api/auth/join", async (req, res) => {
+    try {
+        const { email, password, name, nationality, language } = req.body; // req body 에서 email, password 읽음
+        if (!email || !password || !name) {
+            res.status(400).json({
+                error: "email and password, and name are required.",
+            });
+            return;
+        }
+
+        // email, password 로 DB 조회
+        const [dup] = await pool.query(
+            "SELECT * FROM member WHERE email = ? ",
+            [email],
+        );
+
+        //같은 이메일이 있으면
+        if (dup.length > 0) {
+            res.status(409).json({ error: "Email already exists." });
+            return;
+        }
+
+        const row = rows[0];
+        if (!row) {
+            res.status(401).json({ error: "Invalid email or password." });
+            return;
+        }
+        req.session.memberId = row.id; // 세션에 로그인 상태 저장
+        res.json({ member: mapMemberRow(row) });
+
+        const [result] = await pool.query(
+            "INSERT INTO member (email, password, name, nationality, language) VALUES (?, ?, ?, ?, ?)",
+            [email, password, name, nationality || null, language || "en"],
+            // nationality 없으면 null, language 없으면 기본 en
+        );
+
+        req.session.memberId = result.insertId; // 새로 생긴 회원의 id가 들어옴 가입 직후 세션에 회원 id넣음 -> 가입 동시 로그인
+        const [rows] = await pool.query(
+            "SELECT id, email, name, nationality, language FROM member WHERE id = ?",
+            [result.insertId],
+        );
+        // 방금 넣은 id로 select 해서 비밀번호 제외 필드만 가져옴
+
+        res.status(201).json({ member: mapMemberRow(rows[0]) });
+        //201 created 성공메시지 200 ok: 요청을 잘 처리했음 201- 없던것이 새로 생성됨
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: "Database error." });
+    }
+});
+// 이메일 중복 검사 -> 회원 insert, 세션에 memberId 넣고 -> 비밀번호 없는 회원 정보 json으로 201 응답하는 회원가입 API
+
 app.post("/api/auth/logout", (req, res) => {
     req.session.destroy((err) => {
         // 세션 삭제
@@ -111,6 +163,77 @@ app.post("/api/auth/logout", (req, res) => {
         res.clearCookie("kculture1.sid", { path: "/" }); // 쿠키 제거
         res.json({ ok: true });
     });
+});
+
+/** ---------- categories ---------- : 카테고리 목록만 부른 것임 */
+app.get("/api/categories", async (_req, res) => {
+    try {
+        const [rows] = await pool.query(
+            "SELECT id, code, name_en AS nameEn, name_ko AS nameKo, icon, sort_order AS sortOrder FROM category ORDER BY sort_order",
+        );
+        res.json(rows);
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: "Database error." });
+    }
+});
+
+const POST_SELECT_LIST = `p.id, p.category_id AS categoryId, p.member_id AS memberId, p.title, p.content,
+        p.image_filename AS imageFilename, p.view_count AS viewCount, p.created_at AS createdAt, p.updated_at AS updatedAt,
+        m.name AS memberName, c.name_en AS categoryName, c.icon AS categoryIcon`;
+
+const POST_SELECT_DETAIL = `p.id, p.category_id AS categoryId, p.member_id AS memberId, p.title, p.content,
+      p.image_filename AS imageFilename, p.view_count AS viewCount, p.created_at AS createdAt, p.updated_at AS updatedAt,
+      m.name AS memberName, m.nationality, c.name_en AS categoryName, c.icon AS categoryIcon`;
+
+/** ---------- posts list ---------- */
+app.get("/api/posts", async (req, res) => {
+    try {
+        const categoryId = Number(req.query.categoryId) || 0;
+        const page = Math.max(1, Number(req.query.page) || 1);
+        const pageSize = Math.min(
+            50,
+            Math.max(1, Number(req.query.pageSize) || 10),
+        );
+        const start = (page - 1) * pageSize;
+
+        let listSql;
+        let countSql;
+        const params = [];
+        if (categoryId > 0) {
+            listSql = `SELECT ${POST_SELECT_LIST}
+        FROM post p JOIN member m ON p.member_id = m.id JOIN category c ON p.category_id = c.id
+        WHERE p.category_id = ? ORDER BY p.created_at DESC LIMIT ?, ?`;
+            params.push(categoryId, start, pageSize);
+            countSql = "SELECT COUNT(*) AS cnt FROM post WHERE category_id = ?";
+        } else {
+            listSql = `SELECT ${POST_SELECT_LIST}
+        FROM post p JOIN member m ON p.member_id = m.id JOIN category c ON p.category_id = c.id
+        ORDER BY p.created_at DESC LIMIT ?, ?`;
+            params.push(start, pageSize);
+            countSql = "SELECT COUNT(*) AS cnt FROM post";
+        }
+
+        const [list] = await pool.query(listSql, params);
+        const [countRows] =
+            categoryId > 0
+                ? await pool.query(countSql, [categoryId])
+                : await pool.query(countSql);
+        const total = countRows[0]?.cnt ?? 0;
+        const totalPages = Math.max(1, Math.ceil(total / pageSize));
+
+        res.json({
+            posts: list,
+            total,
+            page,
+            pageSize,
+            totalPages,
+            categoryId,
+        });
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ error: "Database error." });
+    }
 });
 
 app.listen(PORT, () => {
