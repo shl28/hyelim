@@ -2,6 +2,7 @@ package com.example.secondproject.dto;
 
 import com.example.secondproject.entity.Article;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.ToString;
 
 @AllArgsConstructor
@@ -14,6 +15,10 @@ public class ArticleForm {
 
 
     public Article toEntity() {
-        return new Article(id, title, content);
+        return Article.builder()
+                .id(id)
+                .title(title)
+                .content(content)
+                .build();
     }
 }

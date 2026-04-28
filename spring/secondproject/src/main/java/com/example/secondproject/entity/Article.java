@@ -1,10 +1,7 @@
 package com.example.secondproject.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.List;
 
@@ -12,7 +9,8 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@Builder
+@ToString(exclude = "comments")
 
 public class Article {
     @Id
@@ -27,6 +25,12 @@ public class Article {
 
     @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
     private List<Comment> comments;
+
+//    public Article(Long id, String title, String content) {
+//        this.id = id;
+//        this.title = title;
+//        this.content = content;
+//    }
 
     public void patch(Article article) {
         if (article.title != null) {

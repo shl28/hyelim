@@ -6,7 +6,7 @@ import lombok.*;
 
 @Entity
 @Getter
-@ToString
+@ToString(exclude = "article")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
