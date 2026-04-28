@@ -1,0 +1,162 @@
+<div id="comments-list">
+    {{#commentDtos}}
+        <div class="card m-2" id="comments-{{id}}" data-article-id="{{articleId}}">
+            <!--            일반 모드-->
+            <div class="comment-view">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span class="comment-nickname">{{nickname}}</span>
+                    <div>
+                        <!--                        수정버튼(클릭시 수정모드 전환)-->
+                        <button type="button"
+                                class="btn btn-sm btn-outline-primary comment-edit-btn"
+                                data-comment-id="{{id}}"
+                        >수정
+                        </button>
+                        <!--                        삭제 버튼-->
+                        <button type="button"
+                                class="btn btn-sm btn-outline-danger comment-delete-btn"
+                                data-comment-id="{{id}}"
+                        >삭제
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body comment-body">
+                    {{body}}
+                </div>
+            </div>
+
+            <!--            수정 모드-->
+            <div class="comment-edit" style="display: none;">
+                <div class="card-header">
+                    <input type="text"
+                           class="form-control form-control-sm comment-edit-nickname"
+                           value="{{nickname}}"
+                    >
+                    <div class="card-body">
+                        <textarea class="form-control form-control-sm comment-edit-body"
+                                  rows="3">{{body}}</textarea>
+                        <div class="mt-2">
+                            <button type="button"
+                                    class="btn btn-sm btn-primary comment-save-btn"
+                                    data-comment-id="{{id}}"
+                            >저장
+                            </button>
+                            <button type="button"
+                                    class="btn btn-sm btn-secondary comment-cancel-btn"
+                                    data-comment-id="{{id}}"
+                            >취소
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {{/commentDtos}}
+</div>
+
+<script>
+    // 모드 전환 헬퍼 함수
+    function showEditMode(commentId) {
+        const card = document.querySelector(`#comments-${commentId}`);
+        card.querySelector(".comment-view").style.display = "none";
+        card.querySelector(".comment-edit").style.display = "block";
+    }
+
+    function showViewMode(commentId) {
+        const card = document.querySelector(`#comments-${commentId}`);
+        card.querySelector(".comment-view").style.display = "block";
+        card.querySelector(".comment-edit").style.display = "none";
+    }
+
+    //     1. 수정 버튼 클릭 -> 수정 모드 전환
+    {
+        const editBtns = document.querySelectorAll(".comment-edit-btn");
+        editBtns.forEach(btn => {
+            btn.addEventListener("click", (event) => {
+                const commentId = event.target.getAttribute("data-comment-id");
+                showEditMode(commentId);
+            });
+        });
+    }
+
+    //     2. 취소 버튼 클릭 -> 일반모드 전환 + 입력값 원복
+    {
+        const cancelBtns = document.querySelectorAll(".comment-cancel-btn");
+        cancelBtns.forEach(btn => {
+            btn.addEventListener("click", (event) => {
+                const commentId = event.target.getAttribute("data-comment-id");
+                const card = document.querySelector(`#comments-${commentId}`);
+
+                // 입력값 원복
+                const originalNickname = card.querySelector(".comment-nickname").innerText;
+                const originalBody = card.querySelector(".comment-body").innerText.trim();
+                card.querySelector(".comment-edit-nickname").value = originalNickname;
+                card.querySelector(".comment-edit-body").value = originalBody;
+
+                showViewMode(commentId);
+            });
+        });
+    }
+
+    //     3. 저장 버튼 클릭 -> PATCH 요청
+    {
+        const saveBtns = document.querySelectorAll(".comment-save-btn");
+        saveBtns.forEach(btn => {
+            btn.addEventListener("click", (event) => {
+                const commentId = event.target.getAttribute("data-comment-id");
+                const card = document.querySelector(`#comments-${commentId}`);
+                const articleId = card.getAttribute("data-article-id");
+
+                // 입력값 가져오기
+                const newNickname = card.querySelector(".comment-edit-nickname").value;
+                const newBody = card.querySelector(".comment-edit-body").value;
+
+                //수정 댓글 객체
+                const comment = {
+                    id: commentId,
+                    nickname: newNickname,
+                    body: newBody,
+                    article_id: articleId
+                };
+
+                // fetch PATCH 요청
+                const url = `/api/comments/${commentId}`;
+
+                fetch(url, {
+                    method: "PATCH",
+                    body: JSON.stringify(comment),
+                    headers: {"Content-Type": "application/json"}
+                }).then(response => {
+                    if (!response.ok) {
+                        alert("댓글 수정 실패");
+                        return;
+                    }
+                    // 성공시: 화면 갱신
+                    card.querySelector(".comment-nickname").innerText = newNickname;
+                    card.querySelector(".comment-body").innerText = newBody;
+                    showViewMode(commentId);
+                });
+            });
+        });
+    }
+
+    //     4. 삭제 버튼
+    {
+        const deleteBtns = document.querySelectorAll(".comment-delete-btn");
+        deleteBtns.forEach(btn => {
+            btn.addEventListener("click", (event) => {
+                const commentId = event.target.getAttribute("data-comment-id");
+                const url = `/api/comments/${commentId}`;
+
+                fetch(url, {method: "DELETE"})
+                        .then(response => {
+                            if (!response.ok) {
+                                alert("댓글 삭제 실패...");
+                                return;
+                            }
+                            document.querySelector(`#comments-${commentId}`).remove();
+                        });
+            });
+        });
+    }
+</script>

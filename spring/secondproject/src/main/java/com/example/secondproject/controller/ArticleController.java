@@ -1,8 +1,10 @@
 package com.example.secondproject.controller;
 
 import com.example.secondproject.dto.ArticleForm;
+import com.example.secondproject.dto.CommentDto;
 import com.example.secondproject.entity.Article;
 import com.example.secondproject.repository.ArticleRepository;
+import com.example.secondproject.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +20,7 @@ import java.util.List;
 
 public class ArticleController {
     private final ArticleRepository articleRepository;
+    private final CommentService commentService;
 
     @GetMapping("/articles/new")
     public String newArticleForm() {
@@ -36,8 +39,10 @@ public class ArticleController {
     @GetMapping("articles/{id}")
     public String show(@PathVariable Long id, Model model) {
         Article articleEntity = articleRepository.findById(id).orElse(null);
+        List<CommentDto> commentDtos = commentService.comments(id);
 
         model.addAttribute("article", articleEntity);
+        model.addAttribute("commentDtos", commentDtos);
 
         return "articles/show";
     }

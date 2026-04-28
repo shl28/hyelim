@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.util.List;
+
 @Entity
 @Getter
 @NoArgsConstructor
@@ -22,6 +24,19 @@ public class Article {
 
     @Column
     private String content;
+
+    // 하나의 Article은 여러 Comment를 가짐
+    @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
+    private List<Comment> comments;
+    // mappedBy = "article" -> 주인이 아니다라는 뜻
+    // 외래키는 Comment가 관리 , 연관관계의 주인은 Comment
+    // CascadeType.REMOVE : 연쇄삭제
+    // Article이 삭제 -> 연결된 Comment 전부 삭제
+    // Cascade 없으면 게시글 없이 댓글이 남음 -> 외래키 오류 발생
+
+    // 양방향 연관관계 맺으면 양쪽에서 조회 가능
+    // article.getComments()
+    // comment.getArticle()
 
     public void patch(Article article) {
         if (article.title != null){
