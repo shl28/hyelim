@@ -13,18 +13,24 @@
         .field-err { color: #a00; font-size: 0.85rem; margin-top: 0.2rem; }
         .nav { margin-bottom: 1rem; }
         a { color: #06c; }
+        .hint { font-size: 0.85rem; color: #666; margin-top: 0.35rem; }
     </style>
 </head>
 <body>
 <div class="nav"><a th:href="@{/posts}">목록</a></div>
 <h1>글쓰기</h1>
-<form th:action="@{/posts/write}" th:object="${form}" method="post">
+<form th:action="@{/posts/write}" th:object="${form}" method="post" enctype="multipart/form-data">
     <label for="title">제목</label>
     <input type="text" id="title" th:field="*{title}" maxlength="200"/>
     <p class="field-err" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></p>
     <label for="content">내용</label>
     <textarea id="content" th:field="*{content}"></textarea>
     <p class="field-err" th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></p>
+    <label for="files">이미지 첨부 (여러장)</label>
+    <input type="file" id="files" name="files" multiple accept="image/*">
+<!--    multiple ctrl, shift 누르고 여러 파일 동시 선택 가능-->
+<!--    accept="image/*" : 이미지 이외 pdf, txt 등 선택못하도록 함-->
+    <p class="hint">선택 사항입니다. 업로드 시 원본과 200X200 썸네일이 저장됩니다.</p>
     <button type="submit">등록</button>
 </form>
 </body>

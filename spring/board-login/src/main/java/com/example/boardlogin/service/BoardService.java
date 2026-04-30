@@ -40,4 +40,24 @@ public class BoardService {
     // 타임리프 p.author.name 접근
     // db 다시 조회하려고 시도
     // 세션이 없고 터짐
+
+    @Transactional
+    public void update(Long id, String title, String content, String currentUsername) {
+        Board board = boardRepository.findByIdWithAuthor(id)
+                .orElseThrow(() -> new IllegalArgumentException("글이 없습니다."));
+        if (!board.getAuthor().getUsername().equals(currentUsername)) {
+            throw new IllegalArgumentException("작성자만 수정할 수 있습니다.");
+        }
+        board.update(title, content);
+    }
+
+    @Transactional
+    public void delete(Long id, String currentUsername) {
+        Board board = boardRepository.findByIdWithAuthor(id)
+                .orElseThrow(() -> new IllegalArgumentException("글이 없습니다."));
+        if (!board.getAuthor().getUsername().equals(currentUsername)) {
+            throw new IllegalArgumentException("작성자만 삭제할 수 있습니다.");
+        }
+        boardRepository.delete(board);
+    }
 }

@@ -1,17 +1,17 @@
-package com.example.boardlogin.web;
+package com.example.boardloginimg.web;
 
-import com.example.boardlogin.domain.Board;
-import com.example.boardlogin.domain.User;
-import com.example.boardlogin.service.BoardService;
-import com.example.boardlogin.service.UserService;
-import com.example.boardlogin.web.dto.BoardForm;
+import com.example.boardloginimg.domain.Board;
+import com.example.boardloginimg.domain.User;
+import com.example.boardloginimg.service.BoardService;
+import com.example.boardloginimg.service.UserService;
+import com.example.boardloginimg.web.dto.BoardForm;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
-import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/posts")
@@ -74,58 +74,90 @@ public class BoardController {
             return "redirect:/login";
         }
 
-        boardService.create(form.getTitle(), form.getContent(), author);
+        boardService.create(form.getTitle(), form.getContent(), author, form.getFiles());
         return "redirect:/posts";
     }
 
     @GetMapping("/{id:\\d+}/edit")
     public String editForm(@PathVariable Long id, HttpSession session, Model model) {
         Board board = boardService.findById(id);
-        if (!canEdit(session, board)) {
-            return "redirect:/posts/" + id;
-        }
+        if (!canEdit(session, board)) return "redirect:/posts/" + id;
+
         BoardForm form = new BoardForm();
         form.setTitle(board.getTitle());
         form.setContent(board.getContent());
         model.addAttribute("form", form);
         model.addAttribute("postId", id);
+        model.addAttribute("existingImages", board.getImages());
+
         return "board/edit";
     }
 
     @PostMapping("/{id:\\d+}/edit")
-    public String edit(
-            @PathVariable Long id,
-            @Valid @ModelAttribute("form") BoardForm form,
-            BindingResult bindingResult,
-            HttpSession session,
-            Model model) {
+    public String edit(@PathVariable Long id,
+                       @Valid @ModelAttribute("form") BoardForm form,
+                       BindingResult bindingResult,
+                       HttpSession session,
+                       Model model) {
+        Board board = boardService.findById(id);
+        if (!canEdit(session, board)) return "redirect:/posts/" + id;
+
         if (bindingResult.hasErrors()) {
             model.addAttribute("postId", id);
+            model.addAttribute("existingImages",board.getImages());
             return "board/edit";
         }
+
         String username = (String) session.getAttribute(AuthController.SESSION_USER);
+
         try {
-            boardService.update(id, form.getTitle(), form.getContent(), username);
-        } catch (IllegalStateException e) {
+            boardService.update(id, form.getTitle(), form.getContent(), username, form.getFiles(), form.getDeleteImageIds());
+        } catch (IllegalArgumentException e) {
             model.addAttribute("error", e.getMessage());
             model.addAttribute("postId", id);
+            model.addAttribute("existingImages", board.getImages());
             return "board/edit";
         }
         return "redirect:/posts/" + id;
     }
 
     @PostMapping("/{id:\\d+}/delete")
-    public String delete(@PathVariable Long id, HttpSession session, Model model) {
+    public String delete(@PathVariable Long id,
+                         HttpSession session,
+                         RedirectAttributes redirectAttributes) {
+        // 권한 체크
+        Board board = boardService.findById(id);
+        if (!canEdit(session, board)) {
+            return "redirect:/posts/" + id;  // 권한 없으면 상세 페이지로
+        }
+
         String username = (String) session.getAttribute(AuthController.SESSION_USER);
+
         try {
             boardService.delete(id, username);
-        } catch (IllegalStateException e) {
-            model.addAttribute("error", e.getMessage());
-            Board board = boardService.findById(id);
-            model.addAttribute("post", board);
-            model.addAttribute("canEdit", canEdit(session, board));
-            return "board/detail";
+            redirectAttributes.addFlashAttribute("msg", "게시글이 삭제되었습니다.");
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/posts/" + id;
         }
+
         return "redirect:/posts";
     }
+
+    // 강사님 버전
+//    @PostMapping("/{id:\\d+}/delete")
+//    public String delete(@PathVariable Long id, HttpSession session, Model model) {
+//        String usernamer = (String) session.getAttribute(AuthController.SESSION_USER);
+//
+//        try {
+//            boardService.delete(id, usernamer);
+//        } catch (IllegalArgumentException e){
+//            model.addAttribute("error", e.getMessage());
+//            Board board = boardService.findById(id);
+//            model.addAttribute("post", board);
+//            model.addAttribute("canEdit", canEdit(session, board));
+//            return "board/detail";
+//        }
+//        return "redirect:/posts";
+//    }
 }
