@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>홈</title>
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            max-width: 520px;
+            margin: 3rem auto;
+            padding: 0 1rem;
+        }
+
+        h1 {
+            font-size: 1.35rem;
+        }
+
+        a {
+            color: #06c;
+        }
+
+        nav {
+            margin-top: 1.25rem;
+        }
+    </style>
+</head>
+<body>
+<h1>환영합니다.</h1>
+<!--<p>-->
+<!--  #authentication : 현재 로그인 정보 | principal : LoginUserDetails | displayName : 만든 필드 -->
+<!--    <span th:text="${#authentication.principal.displayName}">이름</span>님 (<span sec:authentication="name">아이디</span>) 로그인 중 입니다.-->
+<!-- sec:authentication="name"  auth.getname() = username -->
+<!--</p>-->
+<!--<div sec:authorize="isAuthenticated()">-->
+<p>
+    <span th:text="${#authentication.principal.displayName}">이름</span>님
+    (<span sec:authentication="name">아이디</span>) 로그인 중입니다.
+</p>
+<!--</div>-->
+<nav>
+    <a th:href="@{/posts}">게시판</a>
+    · <a th:href="@{/posts/write}">글쓰기</a>
+    · <a th:href="@{/logout}">로그아웃</a>
+</nav>
+</body>
+</html>
