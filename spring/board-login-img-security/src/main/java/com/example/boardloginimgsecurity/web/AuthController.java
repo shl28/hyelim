@@ -63,11 +63,11 @@ public class AuthController {
 //    그래서 session.setAttribute(SESSION_USER, ...) 같은 코드가 필요 없습니다.
 
 
-    @GetMapping("/logout")
-    public String logout(HttpSession session) {
-        session.invalidate();
-        return "redirect:/posts";
-    }
+//    @GetMapping("/logout")
+//    public String logout(HttpSession session) {
+//        session.invalidate();
+//        return "redirect:/posts";
+//    }
 
     @GetMapping("/register")
     public String registerForm(Model model) {
