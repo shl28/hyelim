@@ -6,7 +6,6 @@ import java.time.Instant;
 
 @Entity
 @Table(name = "gallery_images")
-
 public class GalleryImage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,8 +18,8 @@ public class GalleryImage {
     @Column(nullable = false, length = 255, unique = true)
     private String storedFilename;
 
-    // LocalDateTime : 서버 시간 기준
-    // Instant : UTC 기준 - 글로벌 기준
+    //LocalDateTime - 서버시간기준
+    //Instant (utc 기준-글로벌기준)
     @Column(nullable = false)
     private Instant createdAt;
 
@@ -48,4 +47,5 @@ public class GalleryImage {
     public Instant getCreatedAt() {
         return createdAt;
     }
+
 }

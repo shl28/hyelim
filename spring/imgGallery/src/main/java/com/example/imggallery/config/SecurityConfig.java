@@ -16,8 +16,9 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-
 public class SecurityConfig {
+
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -25,17 +26,20 @@ public class SecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService(
-            @Value("${app.admin.username}") String username,
-            @Value("${app.admin.password}") String rawPassword,
-            PasswordEncoder passwordEncoder
-    ) {
+        @Value("${app.admin.username}") String username,
+        @Value("${app.admin.password}") String rawPassword,
+        PasswordEncoder passwordEncoder
+        ){
         UserDetails admin = User.builder()
                 .username(username)
                 .password(passwordEncoder.encode(rawPassword))
                 .roles("ADMIN")
                 .build();
         return new InMemoryUserDetailsManager(admin);
+
     }
+
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
