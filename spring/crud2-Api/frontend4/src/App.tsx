@@ -9,11 +9,17 @@ import {
 } from "react-router-dom";
 
 const API = "/api/doits";
-// 기본 경로
 
-// fetchJson : API 요청 전담 함수
-// 기본은 미리 세팅 "Content-Type" 같은 경우는 미리 세팅 + 세부설정은 호출하는 쪽에서 결정
-async function fetchJson(url, options) {
+type DoIt = {
+    num: number;
+    title: string;
+    content: string;
+};
+
+// <T> 제네릭 : 요청의 응답 json 어떤 타입인지 호출하는 쪽에서 지정할 수 있음
+// Promise : fetch, axios, setTimeOut 같은 비동기 작업 결과를 담는 객체
+// (Promise)<T> : 비동기 작업 성공 시 최종적으로 얻는 타입
+async function fetchJson<T>(url: string, options?: RequestInit): Promise<T> {
     const res = await fetch(url, {
         headers: {
             "Content-Type": "application/json",
@@ -21,33 +27,30 @@ async function fetchJson(url, options) {
         },
         ...options,
     });
-    // options 내용이 없으면 get으로 인정(READ)
-    // ...options : 호출 시 추가로 옵션 부여할 예정(post, put, delete json 변경)
     if (!res.ok) {
         const text = await res.text();
         throw new Error(text || res.statusText);
     }
-    if (res.status === 204) return null;
-    // 204 삭제 완료 시 응답은 성공, 내용 없음
+    if (res.status === 204) return null as T;
     return res.json();
 }
 
-// 요청해서 페이지를 가져오는 REST API 주소는 /api/doits
-// /list : 사람이 보는 페이지-url 표시되는 주소 (React Router 처리함)
 function ListPage() {
-    const location = useLocation(); // url 정보 가져옴
-    const [items, setItems] = useState([]); // 게시글 목록 저장
-    const [error, setError] = useState(null); // API 호출 시 에러메세지
-    const [loading, setLoading] = useState(true); // 목록을 가지고 오는 중인지 여부
+    const location = useLocation();
+    const [items, setItems] = useState<DoIt[]>([]);
+    const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         setLoading(true);
         setError(null);
-        fetchJson(API)
+        fetchJson<DoIt[]>(API)
             .then(setItems)
-            .catch((e) => setError(e.message))
+            .catch((e: unknown) =>
+                setError(e instanceof Error ? e.message : String(e)),
+            )
             .finally(() => setLoading(false));
-    }, [location.key]); // 페이지 이동시 호출
+    }, [location.key]);
 
     if (loading) return <p className="text-muted">불러오는 중…</p>;
     if (error) return <div className="alert alert-danger">{error}</div>;
@@ -92,7 +95,7 @@ function ListPage() {
     );
 }
 
-function DeleteButton({ num }) {
+function DeleteButton({ num }: { num: number }) {
     const navigate = useNavigate();
     const onDelete = async () => {
         if (!confirm("삭제할까요?")) return;
@@ -106,8 +109,10 @@ function DeleteButton({ num }) {
             } else {
                 alert("삭제 실패");
             }
-        } catch (e) {
-            alert(e.message);
+            // 타입스크립트 e 는 기본이 unknown 임 -> e.message 만 쓰면 message가 있는지 확실하지않다는 오류 발생
+        } catch (e: unknown) {
+            alert(e instanceof Error ? e.message : String(e));
+            // instanceof Error : e가 Error 객체인지 확인 맞으면 e.message 출력 아니면 강제로 String 문자열로 만들어 표시
         }
     };
     return (
@@ -121,9 +126,10 @@ function DeleteButton({ num }) {
     );
 }
 
-function Layout({ children }) {
+function Layout({ children }: { children: React.ReactNode }) {
     const location = useLocation();
-    const flash = location.state?.msg;
+    const flash = (location.state as { msg?: string } | null)?.msg;
+    // 페이지가 이동할때 전달할 메세지(msg)가 있으면 꺼내고 없으면 undefined
 
     return (
         <>
@@ -165,13 +171,12 @@ function Layout({ children }) {
 }
 
 function DetailPage() {
-    // 사용자가 /list/123 으로 접속하면 useParams num : 123 객체를 반환
-    const { num } = useParams();
-    const [item, setItem] = useState(null);
-    const [error, setError] = useState(null);
+    const { num } = useParams<{ num: string }>();
+    const [item, setItem] = useState<DoIt | null>(null);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        fetchJson(`${API}/${num}`)
+        fetchJson<DoIt>(`${API}/${num}`)
             .then(setItem)
             .catch(() => setError("없는 글이거나 오류가 발생했습니다."));
     }, [num]);
@@ -202,26 +207,24 @@ function DetailPage() {
 }
 
 function AddPage() {
-    // useNavigate : 지도 네비게이션
-    // return "redirect:/list" -> 프론트엔드 navigate("/list")
     const navigate = useNavigate();
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
-    const [err, setErr] = useState(null);
+    const [err, setErr] = useState<string | null>(null);
 
-    const onSubmit = async (e) => {
+    const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         setErr(null);
         try {
-            const saved = await fetchJson(API, {
+            const saved = await fetchJson<DoIt>(API, {
                 method: "POST",
                 body: JSON.stringify({ title, content }),
             });
 
             navigate(`/list/${saved.num}`, { replace: true });
-        } catch (e2) {
-            setErr(e2.message);
+        } catch (e2: unknown) {
+            setErr(e2 instanceof Error ? e2.message : String(e2));
         }
     };
 
@@ -262,15 +265,15 @@ function AddPage() {
 }
 
 function EditPage() {
-    const { num } = useParams();
+    const { num } = useParams<{ num: string }>();
     const navigate = useNavigate();
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const [loading, setLoading] = useState(true);
-    const [err, setErr] = useState(null);
+    const [err, setErr] = useState<string | null>(null);
 
     useEffect(() => {
-        fetchJson(`${API}/${num}`)
+        fetchJson<DoIt>(`${API}/${num}`)
             .then((row) => {
                 setTitle(row.title ?? "");
                 setContent(row.content ?? "");
@@ -279,19 +282,19 @@ function EditPage() {
             .finally(() => setLoading(false));
     }, [num]);
 
-    const onSubmit = async (e) => {
+    const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         setErr(null);
         try {
-            await fetchJson(`${API}/${num}`, {
+            await fetchJson<DoIt>(`${API}/${num}`, {
                 method: "PUT",
                 body: JSON.stringify({ title, content }),
             });
 
             navigate(`/list/${num}`, { replace: true });
-        } catch (e2) {
-            setErr(e2.message);
+        } catch (e2: unknown) {
+            setErr(e2 instanceof Error ? e2.message : String(e2));
         }
     };
 

@@ -7,30 +7,7 @@ import {
     useNavigate,
     useParams,
 } from "react-router-dom";
-
-const API = "/api/doits";
-// 기본 경로
-
-// fetchJson : API 요청 전담 함수
-// 기본은 미리 세팅 "Content-Type" 같은 경우는 미리 세팅 + 세부설정은 호출하는 쪽에서 결정
-async function fetchJson(url, options) {
-    const res = await fetch(url, {
-        headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-        },
-        ...options,
-    });
-    // options 내용이 없으면 get으로 인정(READ)
-    // ...options : 호출 시 추가로 옵션 부여할 예정(post, put, delete json 변경)
-    if (!res.ok) {
-        const text = await res.text();
-        throw new Error(text || res.statusText);
-    }
-    if (res.status === 204) return null;
-    // 204 삭제 완료 시 응답은 성공, 내용 없음
-    return res.json();
-}
+import { doitsApi, axiosErrorMessage } from "./api/client";
 
 // 요청해서 페이지를 가져오는 REST API 주소는 /api/doits
 // /list : 사람이 보는 페이지-url 표시되는 주소 (React Router 처리함)
@@ -43,9 +20,10 @@ function ListPage() {
     useEffect(() => {
         setLoading(true);
         setError(null);
-        fetchJson(API)
-            .then(setItems)
-            .catch((e) => setError(e.message))
+        doitsApi
+            .get("")
+            .then((res) => setItems(res.data))
+            .catch((e) => setError(axiosErrorMessage(e)))
             .finally(() => setLoading(false));
     }, [location.key]); // 페이지 이동시 호출
 
@@ -97,7 +75,7 @@ function DeleteButton({ num }) {
     const onDelete = async () => {
         if (!confirm("삭제할까요?")) return;
         try {
-            const res = await fetch(`${API}/${num}`, { method: "DELETE" });
+            const res = await doitsApi.delete(`/${num}`);
             if (res.status === 204) {
                 navigate("/list", {
                     replace: true,
@@ -107,7 +85,7 @@ function DeleteButton({ num }) {
                 alert("삭제 실패");
             }
         } catch (e) {
-            alert(e.message);
+            alert(axiosErrorMessage(e));
         }
     };
     return (
@@ -171,8 +149,9 @@ function DetailPage() {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        fetchJson(`${API}/${num}`)
-            .then(setItem)
+        doitsApi
+            .get(`/${num}`)
+            .then((res) => setItem(res.data))
             .catch(() => setError("없는 글이거나 오류가 발생했습니다."));
     }, [num]);
 
@@ -214,14 +193,11 @@ function AddPage() {
 
         setErr(null);
         try {
-            const saved = await fetchJson(API, {
-                method: "POST",
-                body: JSON.stringify({ title, content }),
-            });
+            const { data: saved } = await doitsApi.post("", { title, content });
 
             navigate(`/list/${saved.num}`, { replace: true });
         } catch (e2) {
-            setErr(e2.message);
+            setErr(axiosErrorMessage(e2));
         }
     };
 
@@ -270,8 +246,10 @@ function EditPage() {
     const [err, setErr] = useState(null);
 
     useEffect(() => {
-        fetchJson(`${API}/${num}`)
-            .then((row) => {
+        doitsApi
+            .get(`/${num}`)
+            .then((res) => {
+                const row = res.data;
                 setTitle(row.title ?? "");
                 setContent(row.content ?? "");
             })
@@ -284,14 +262,10 @@ function EditPage() {
 
         setErr(null);
         try {
-            await fetchJson(`${API}/${num}`, {
-                method: "PUT",
-                body: JSON.stringify({ title, content }),
-            });
-
+            await doitsApi.put(`/${num}`, { title, content });
             navigate(`/list/${num}`, { replace: true });
         } catch (e2) {
-            setErr(e2.message);
+            setErr(axiosErrorMessage(e2));
         }
     };
 

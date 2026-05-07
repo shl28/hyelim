@@ -1,0 +1,18 @@
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+
+// https://vite.dev/config/
+export default defineConfig({
+    plugins: [react()],
+    server: {
+        port: 5175,
+        proxy: {
+            "/api": {
+                target: "http://localhost:8080",
+                changeOrigin: true,
+            },
+        },
+    },
+});
+// 리액트와 스프링부트 연결
+// fetch("/api/posts") -> http://localhost:8080/api/posts
