@@ -11,14 +11,23 @@ export default function ListPage() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // setLoading(true);
-        // setError(null);
+        let cancelled = false;
         fetchDoitList()
-            .then(setItems)
-            .catch((e: unknown) =>
-                setError(e instanceof Error ? e.message : String(e)),
-            )
-            .finally(() => setLoading(false));
+            .then((data) => {
+                if (cancelled) return;
+                setItems(data);
+                setError(null); // 성공했으니 에러 초기화
+            })
+            .catch((e: unknown) => {
+                if (cancelled) return;
+                setError(e instanceof Error ? e.message : String(e));
+            })
+            .finally(() => {
+                if (!cancelled) setLoading(false);
+            });
+        return () => {
+            cancelled = true;
+        };
     }, [location.key]);
 
     if (loading) return <p className="text-muted">불러오는 중…</p>;
