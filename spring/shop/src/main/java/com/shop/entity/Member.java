@@ -15,7 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @AllArgsConstructor
 @Builder
 
-public class Member {
+public class Member extends BaseEntity {
     @Id
     @Column(name = "member_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -32,6 +32,11 @@ public class Member {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    // 양방향 매핑 시
+//    @OneToOne(mappedBy = "member")
+//    private Cart cart;
+    // member.getCart() 가능함
 
 //    public static Member createMember(MemberFormDto memberFormDto, PasswordEncoder passwordEncoder) {
 //        Member member = new Member();
