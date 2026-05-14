@@ -25,4 +25,25 @@ public class CartItem extends BaseEntity {
     private Item item;
 
     private int count;
+
+    // 세가지 주요 상황 : 처음 담기, 추가로 담기, 수량을 직접 수정
+
+    // 어떤 장바구니(Cart)에 어떤 상품(Item)을 몇개(count) 담을지 결정하여 CartItem 객체 생성
+    public static CartItem createCartItem(Cart cart, Item item, int count) {
+        CartItem cartItem = new CartItem();
+        cartItem.setCart(cart);
+        cartItem.setItem(item);
+        cartItem.setCount(count);
+        return cartItem;
+    }
+
+    // 사용자가 이미 장바구니에 들어있는 상품을 상세페이지에서 다시 "장바구니담기"했을때
+    public void addCount(int count) {
+        this.count += count;
+    }
+
+    // 장바구니 목록페이지에서 사용자가 직접 상품 개수를 입력하거나, +,- 버튼을 눌러 수량 변경
+    public void updateCount(int count) {
+        this.count = count;
+    }
 }
