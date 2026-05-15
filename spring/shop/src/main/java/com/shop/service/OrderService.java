@@ -33,6 +33,8 @@ public class OrderService {
 
     private final ItemImgRepository itemImgRepository;
 
+    // 셔츠 1품목만 주문
+    // 상품 상세 페이지 - 구매하기 버튼 - order 실행(한품목만 바로 구매)
     public Long order(OrderDto orderDto, String email) {
         Item item = itemRepository.findById(orderDto.getItemId()).orElseThrow(EntityNotFoundException::new);
 
@@ -50,13 +52,34 @@ public class OrderService {
         return order.getId();
     }
 
+    // 여러 상품 주문 : 장바구니 전체 주문 - 장바구니 체크박스 선택된 항목 주문
+    public Long orders(List<OrderDto> orderDtoList, String email) {
+        Member member = memberRepository.findByEmail(email);
+        List<OrderItem> orderItemList = new ArrayList<>();
+
+        for (OrderDto orderDto : orderDtoList) {
+            Item item = itemRepository.findById(orderDto.getItemId()).orElseThrow(EntityNotFoundException::new);
+
+            OrderItem orderItem = OrderItem.createOrderItem(item, orderDto.getCount());
+
+            orderItemList.add(orderItem);
+        }
+// 셔츠 1개 바지 1개 운동화 1개
+
+        Order order = Order.createOrder(member, orderItemList);
+
+        orderRepository.save(order);
+
+        return order.getId();
+    }
+
     @Transactional(readOnly = true)
     public boolean validateOrder(Long orderId, String email) {
         Member curMember = memberRepository.findByEmail(email);
         Order order = orderRepository.findById(orderId).orElseThrow(EntityNotFoundException::new);
         Member savedMember = order.getMember();
 
-        if (!StringUtils.equals(curMember.getEmail(), savedMember.getEmail())){
+        if (!StringUtils.equals(curMember.getEmail(), savedMember.getEmail())) {
             return false;
         }
 
