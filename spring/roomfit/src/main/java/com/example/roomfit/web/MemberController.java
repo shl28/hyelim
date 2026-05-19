@@ -17,14 +17,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/member")
-
 public class MemberController {
 
     private final MemberService memberService;
     private final UserProfileService userProfileService;
 
     @GetMapping("/find-id")
-    public String findIdForm(){
+    public String findIdForm() {
         return "member/find-id";
     }
 
@@ -43,7 +42,6 @@ public class MemberController {
     public String findPwForm() {
         return "member/find-pw";
     }
-
     @PostMapping("/find-pw")
     public String findPw(
             @RequestParam("loginId") String loginId,
@@ -60,12 +58,13 @@ public class MemberController {
         }
     }
 
-    @GetMapping("/mypage")
-    public String mypage(@AuthenticationPrincipal Member member, Model model) {
+    //mypage
+    //@AuthenticationPrincipal Member member 현재 로긍힌 회원을  Member 엔티티로 넣어줌
+    @GetMapping("mypage")
+    public String mypage(@AuthenticationPrincipal Member member, Model model){
         model.addAttribute("profile", userProfileService.findByMemberId(member.getId()));
         return "member/mypage";
     }
-
     @GetMapping("/edit")
     public String editForm(@AuthenticationPrincipal Member member, Model model) {
         model.addAttribute("member", memberService.findById(member.getId()));
@@ -74,24 +73,24 @@ public class MemberController {
     }
 
     @PostMapping("/edit")
-    public String edit(@AuthenticationPrincipal Member member,
-                       @RequestParam("nickname") String nickname,
-                       @RequestParam(name = "phone", required = false) String phone,
-                       @RequestParam(name = "gender", required = false) Gender gender,
-                       RedirectAttributes ra) {
+    public String edit(
+            @AuthenticationPrincipal Member member,
+            @RequestParam("nickname") String nickname,
+            @RequestParam(name = "phone", required = false) String phone,
+            @RequestParam(name = "gender", required = false) Gender gender,
+            RedirectAttributes ra) {
         memberService.updateMember(member.getId(), nickname, phone, gender);
-        ra.addFlashAttribute("message", "회원 정보가 수정되었습니다.");
+        ra.addFlashAttribute("message", "회원정보가 수정되었습니다.");
         return "redirect:/member/mypage";
     }
 
-    @PostMapping("/withdraw")
+    @PostMapping("withdraw")
     public String withdraw(@AuthenticationPrincipal Member member, RedirectAttributes ra) {
         memberService.withdraw(member.getId());
         ra.addFlashAttribute("message", "회원 탈퇴가 완료되었습니다.");
         return "redirect:/logout";
     }
-
-    @GetMapping("/profile")
+    @GetMapping("/profile") //폼화면 열기
     public String profileForm(@AuthenticationPrincipal Member member, Model model) {
         var profile = userProfileService.findByMemberId(member.getId());
         if (profile != null) {
@@ -109,13 +108,20 @@ public class MemberController {
         return "member/profile";
     }
 
-    @PostMapping("/profile")
-    public String saveProfile(@AuthenticationPrincipal Member member,
-                              @Valid @ModelAttribute("form") ProfileFormDto form,
-                              BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) return "member/profile";
-
-        userProfileService.saveOrUpdate(member.getId(), form);
-        return "redirect:/recommend/result";
+@PostMapping("/profile") //저장하기
+public String saveProfile(
+        @AuthenticationPrincipal Member member,
+        @Valid @ModelAttribute("form") ProfileFormDto form,
+        BindingResult bindingResult) {
+    if (bindingResult.hasErrors()) {
+        return "member/profile";
     }
+    userProfileService.saveOrUpdate(member.getId(), form);
+    return "redirect:/recommend/result";
+} //저장후 추천받기
+
+
+
+
+
 }

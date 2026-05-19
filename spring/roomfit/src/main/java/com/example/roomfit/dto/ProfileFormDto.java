@@ -12,18 +12,18 @@ import lombok.Setter;
 @Setter
 public class ProfileFormDto {
 
-    @NotNull
-    @DecimalMin("1.0")
-    private BigDecimal roomSize;
+	@NotNull
+	@DecimalMin("1.0")
+	private BigDecimal roomSize;
 
-    @NotNull
-    @Min(10)
-    private Integer budget;
+	@NotNull
+	@Min(10)
+	private Integer budget;
 
-    @NotNull
-    private InteriorStyle preferredStyle;
+	@NotNull
+	private InteriorStyle preferredStyle;
 
-    private String lifestyle;
-    private boolean hasFurniture;
-    private String sleepPattern;
+	private String lifestyle;
+	private boolean hasFurniture;
+	private String sleepPattern;
 }

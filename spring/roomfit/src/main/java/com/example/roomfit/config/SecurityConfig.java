@@ -52,23 +52,22 @@ public class SecurityConfig {
                                 "/community/report"
                         ).authenticated()
                         .anyRequest().authenticated())
-                .formLogin(form -> form
-                        .loginPage("/login")
-                        .usernameParameter("loginId")
-                        .defaultSuccessUrl("/", true)
-                        .permitAll())
-                .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/")
-                        .invalidateHttpSession(true)
-                        .deleteCookies("JSESSIONID")
-                        .permitAll())
-                .csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**"))
-                .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()));
-            // form, post 요청에 세션과 짝이되는 토큰(csrf)가 있어야 시큐리티 통과, 없으면 403
+                        .formLogin(form -> form
+                                .loginPage("/login")
+                                .usernameParameter("loginId")
+                                .defaultSuccessUrl("/", true)
+                                .permitAll())
+                        .logout(logout -> logout
+                                .logoutUrl("/logout")
+                                .logoutSuccessUrl("/")
+                                .invalidateHttpSession(true)
+                                .deleteCookies("JSESSIONID")
+                                .permitAll())
+                        .csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**"))
+                        .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()));
+                //form , post 요청에 세션과 짝이되는 토큰(csrf)가 잇어야 시큐리티 통과 없으면 403
         return http.build();
     }
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

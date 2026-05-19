@@ -65,6 +65,7 @@ public class Member implements UserDetails {
     @Builder.Default
     private MemberStatus status = MemberStatus.ACTIVE;
 
+    //엔티티 생성시간 기본값으로 자동으로 저장
     @Builder.Default
     @Column(nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
@@ -72,34 +73,37 @@ public class Member implements UserDetails {
     private LocalDateTime updatedAt;
     private LocalDateTime withdrawnAt;
 
-    // 로그인한 회원이 어떤 권한을 가지고 있는지 부여
+    //로그인한 회원이 어떤 권한을 가지고 있는지  권한(Role) 부여
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
     }
 
+    //이름은  getUsername() 이지만 - 이메일, 사번 고유한 로그인 Id를 반환
     @Override
     public String getUsername() {
         return loginId;
     }
 
+    //계정상태 체크
+
     @Override
-    public boolean isAccountNonExpired() {
+    public boolean isAccountNonExpired() { //계정이 만료되었는가?
         return true;
     }
 
     @Override
-    public boolean isAccountNonLocked() {
+    public boolean isAccountNonLocked() { //계정이 잠겼는가?
         return status != MemberStatus.SUSPENDED;
     }
 
     @Override
-    public boolean isCredentialsNonExpired() { // 비밀번호 만료, 장기 미변경
+    public boolean isCredentialsNonExpired() {//비빌번호가 만료(장기미변경)
         return true;
     }
 
     @Override
-    public boolean isEnabled() {
+    public boolean isEnabled() { //계정이 활성화 상태인가 ?(휴먼 탈퇴여부)
         return status == MemberStatus.ACTIVE;
     }
 }

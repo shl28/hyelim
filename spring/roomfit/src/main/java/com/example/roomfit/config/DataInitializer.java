@@ -1,13 +1,7 @@
 package com.example.roomfit.config;
 
-//import com.example.roomfit.domain.InteriorPost;
-import com.example.roomfit.domain.InteriorStyle;
-import com.example.roomfit.domain.Member;
-//import com.example.roomfit.domain.PostImage;
-//import com.example.roomfit.domain.Product;
-import com.example.roomfit.domain.Role;
-import com.example.roomfit.domain.UserProfile;
-//import com.example.roomfit.repository.InteriorPostRepository;
+import com.example.roomfit.domain.*;
+import com.example.roomfit.repository.InteriorPostRepository;
 import com.example.roomfit.repository.MemberRepository;
 //import com.example.roomfit.repository.ProductRepository;
 import com.example.roomfit.repository.UserProfileRepository;
@@ -21,88 +15,116 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
-@Profile("!test") // test 환경 제외
+@Profile("!test")
 @RequiredArgsConstructor
 @Slf4j
 public class DataInitializer {
 
-    // 관리자 계정 생성, 일반 회원 생성, 회원 프로필 생성, 샘플 게시글 생성, 샘플 상품 생성
+	private final MemberRepository memberRepository;
+	private final UserProfileRepository userProfileRepository;
+	private final InteriorPostRepository interiorPostRepository;
+	//   private final ProductRepository productRepository;
+	private final PasswordEncoder passwordEncoder;
 
-    private final MemberRepository memberRepository;
-    private final UserProfileRepository userProfileRepository;
-//    private final InteriorPostRepository interiorPostRepository;
-//    private final ProductRepository productRepository;
-    private final PasswordEncoder passwordEncoder;
+	@Bean
+	CommandLineRunner seed() {
+		return args -> {
+			seedMembers();
+			seedInteriorPosts();
+			//seedProducts();
+		};
+	}
 
-    @Bean
-    CommandLineRunner seed() {
-        return args -> seedAdmin();
-    } // 스프링 부트 실행 완료 후 자동 실행
+	private void seedMembers() {
+		if (!memberRepository.existsByLoginId("admin")) {
+			memberRepository.save(Member.builder()
+					.loginId("admin")
+					.password(passwordEncoder.encode("admin1234"))
+					.name("관리자")
+					.nickname("RoomFit관리자")
+					.email("admin@roomfit.local")
+					.role(Role.ADMIN)
+					.build());
+			log.info("관리자: admin / admin1234");
+		}
 
-    private void seedAdmin() {
-        if (memberRepository.existsByLoginId("admin")) { // 관리자 중복 방지, admin 이미 있으면 전체 종료
-            return;
-        }
-        memberRepository.save(Member.builder()
-                .loginId("admin")
-                .password(passwordEncoder.encode("admin1234"))
-                .name("관리자")
-                .nickname("RoomFit관리자")
-                .email("admin@roomfit.local")
-                .role(Role.ADMIN)
-                .build());
-        log.info("관리자: admin / admin1234");
+		Member user = memberRepository.findByLoginId("user1").orElseGet(() -> {
+			Member saved = memberRepository.save(Member.builder()
+					.loginId("user1")
+					.password(passwordEncoder.encode("user1234"))
+					.name("김자취")
+					.nickname("원룸러버")
+					.email("user1@roomfit.local")
+					.role(Role.USER)
+					.build());
+			log.info("데모 회원: user1 / user1234");
+			return saved;
+		});
 
-        Member user = memberRepository.save(Member.builder()
-                .loginId("user1")
-                .password(passwordEncoder.encode("user1234"))
-                .name("김자취")
-                .nickname("원룸러버")
-                .email("user1@roomfit.local")
-                .role(Role.USER)
-                .build());
-        log.info("데모 회원: user1 / user1234");
+		if (userProfileRepository.findByMemberId(user.getId()).isEmpty()) {
+			userProfileRepository.save(UserProfile.builder()
+					.member(user)
+					.roomSize(BigDecimal.valueOf(8.5))
+					.budget(150)
+					.preferredStyle(InteriorStyle.MINIMAL)
+					.lifestyle("재택")
+					.hasFurniture(false)
+					.sleepPattern("아침형")
+					.build());
+		}
+	}
 
-        userProfileRepository.save(UserProfile.builder()
-                .member(user)
-                .roomSize(BigDecimal.valueOf(8.5))
-                .budget(150)
-                .preferredStyle(InteriorStyle.MINIMAL)
-                .lifestyle("재택")
-                .hasFurniture(false)
-                .sleepPattern("아침형")
-                .build());
+	private void seedInteriorPosts() {
+		if (interiorPostRepository.count() > 0) {
+			return;
+		}
 
-//        InteriorPost post = InteriorPost.builder()
-//                .author(user)
-//                .style(InteriorStyle.MINIMAL)
-//                .title("8평 원룸 미니멀 자취방")
-//                .content("화이트 톤과 수납 침대로 공간을 넓게 썼습니다.")
-//                .roomSize(BigDecimal.valueOf(8.5))
-//                .budget(120)
-//                .likeCount(12)
-//                .viewCount(80)
-//                .build();
-//        post.addImage(PostImage.builder()
-//                .filePath("https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800")
-//                .thumbnail(true)
-//                .build());
-//        interiorPostRepository.save(post);
-//
-//        productRepository.save(Product.builder()
-//                .name("미니 수납 협탁")
-//                .price(39000)
-//                .styleTag(InteriorStyle.MINIMAL)
-//                .imagePath("https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400")
-//                .avgRating(4.5)
-//                .reviewCount(3)
-//                .build());
-//        productRepository.save(Product.builder()
-//                .name("북유럽 원목 스탠드")
-//                .price(59000)
-//                .styleTag(InteriorStyle.SCANDINAVIAN)
-//                .imagePath("https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=400")
-//                .avgRating(4.2)
-//                .build());
-    }
+		Member author = memberRepository.findByLoginId("user1")
+				.or(() -> memberRepository.findAll().stream().findFirst())
+				.orElse(null);
+		if (author == null) {
+			log.warn("샘플 인테리어 글을 넣을 회원이 없어 건너뜁니다.");
+			return;
+		}
+
+		InteriorPost post = InteriorPost.builder()
+				.author(author)
+				.style(InteriorStyle.MINIMAL)
+				.title("8평 원룸 미니멀 자취방")
+				.content("화이트 톤과 수납 침대로 공간을 넓게 썼습니다.")
+				.roomSize(BigDecimal.valueOf(8.5))
+				.budget(120)
+				.likeCount(12)
+				.viewCount(80)
+				.build();
+		post.addImage(PostImage.builder()
+				.filePath("https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800")
+				.thumbnail(true)
+				.build());
+		interiorPostRepository.save(post);
+		log.info("샘플 인테리어 글 1건을 등록했습니다.");
+	}
+
+	private void seedProducts() {
+//      if (productRepository.count() > 0) {
+//         return;
+//      }
+//      productRepository.save(Product.builder()
+//            .name("미니 수납 협탁")
+//            .price(39000)
+//            .styleTag(InteriorStyle.MINIMAL)
+//            .imagePath("https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400")
+//            .avgRating(4.5)
+//            .reviewCount(3)
+//            .build());
+//      productRepository.save(Product.builder()
+//            .name("북유럽 원목 스탠드")
+//            .price(59000)
+//            .styleTag(InteriorStyle.SCANDINAVIAN)
+//            .imagePath("https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=400")
+//            .avgRating(4.2)
+//            .reviewCount(3)
+//            .build());
+//      log.info("샘플 상품 2건을 등록했습니다.");
+	}
 }

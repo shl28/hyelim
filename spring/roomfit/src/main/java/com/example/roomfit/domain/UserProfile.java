@@ -1,5 +1,6 @@
 package com.example.roomfit.domain;
 
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -7,33 +8,37 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "user_profiles")
+@Table(name="user_profiles")
 @Getter
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-
 public class UserProfile {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY) //맴버하나에 프로필 하나
     @JoinColumn(nullable = false, unique = true)
     private Member member;
 
-    // 방크기 8.5평 등 precision(전체 자리수) 4, scale(소수점 자리수) 1
+    //방크기 8.5펼 12.0평 전체 자리수 4  소수점 자리수 1
     @Column(nullable = false, precision = 4, scale = 1)
     private BigDecimal roomSize;
 
+    //예산
     @Column(nullable = false)
     private Integer budget;
+
+
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 30)
     private InteriorStyle preferredStyle;
 
+    //생활패턴
     @Column(length = 50)
     private String lifestyle;
 
@@ -46,4 +51,5 @@ public class UserProfile {
 
     @Builder.Default
     private LocalDateTime updatedAt = LocalDateTime.now();
+
 }

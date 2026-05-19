@@ -1,5 +1,6 @@
 package com.example.roomfit.domain;
 
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,17 +16,16 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-
 public class InteriorPost {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY) //N개의 글 -> 1명의 작성자
+    @JoinColumn(nullable = false)//author_id
     private Member author;
 
-    @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.STRING) //미니멀 북유럽 모던
     @Column(nullable = false, length = 30)
     private InteriorStyle style;
 
@@ -39,35 +39,38 @@ public class InteriorPost {
     private Integer budget;
 
     @Builder.Default
-    private int viewCount = 0;
+    private int viewCount = 0; //조회수
 
     @Builder.Default
-    private int likeCount = 0;
+    private int likeCount = 0;//좋아요
 
     @Builder.Default
-    private int commentCount = 0;
+    private int commentCount = 0; //댓글 수
 
     @Builder.Default
-    private boolean hasFurnitureTag = false;
+    private boolean hasFurnitureTag = false; //가구 관련 태그 여부
 
     @Enumerated(EnumType.STRING)
     @Builder.Default
-    private PostStatus status = PostStatus.VISIBLE;
+    private PostStatus status = PostStatus.VISIBLE;  //기본값 .VISIBLE
 
     @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
 
     private LocalDateTime updatedAt;
 
+    //CascadeType.ALL, 글 저장 삭제시 이미지도 함께 persist/remove
+//orphanRemoval = true 리스트에서 빠진 이미지는 DB에서도 삭제
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    @OrderBy("sortOrder ASC")
+    @OrderBy("sortOrder ASC") //오름차순
     @Builder.Default
     private List<PostImage> images = new ArrayList<>();
 
-    public void addImage(PostImage image) { // 연관관계 편의 메서드
-        images.add(image);
-        image.setPost(this);
+    public void addImage(PostImage image) {//연관 관계 편의 메서드
+        images.add(image);//내(InteriorPost) 자식 리스트에서 이미지 추가
+        image.setPost(this);//상대방(PostImage)에게 주인지정
     }
+    //post.addImage(image) 호출하매도 양쪽 연결고리가 완벽하게 동기화
 
     public void increaseViewCount() {
         this.viewCount++;
@@ -75,43 +78,23 @@ public class InteriorPost {
 
     /** 목록/메인용 썸네일 (images 가 @EntityGraph 로 로드된 뒤 사용) */
     public String getThumbnailPath() {
-        if (images == null || images.isEmpty()) { // 이미지 없으면 기본 이미지
+        if (images == null || images.isEmpty()) {//이미지가 없으면 기본이미지
             return "/images/no-image.svg";
         }
         String path = images.stream()
-                .filter(PostImage::isThumbnail) // thumbnail - true(대표 썸네일 필터링)
-                .map(PostImage::getFilePath) // 첫번쨰 유효한 filePath
-                .filter(p -> p != null && !p.isBlank())
-                .findFirst() // 있으면 추출
-                .orElseGet(() -> images.stream() // thumbnail 지정 없으면 -> 아무 이미지나 첫장
+                .filter(PostImage::isThumbnail) //thumbnail - true(대표썸네일 필터링)
+                .map(PostImage::getFilePath) //첫번재 유효한 filepath - 파일경로
+                .filter(p -> p != null && !p.isBlank())//null / 빈문자열 제거
+                .findFirst()//있으면 추출
+                .orElseGet(() -> images.stream()//썸네일 지정이 없으면(차선책) -> 아무 이미지나 첫장
                         .map(PostImage::getFilePath)
                         .filter(p -> p != null && !p.isBlank())
-                        .findFirst() // 첫번째 이미지 추출
+                        .findFirst()//첫번째 이미지 추출
                         .orElse(null));
         if (path == null) {
-            return "/images/no-image.svg"; // 데이터가 전부 유효하지 않다면 최종 반환
+            return "/images/no-image.svg";//데이터가 전부 유효하지 않다면 최종반환
         }
         return path;
-
-//        목록/메인용 썸네일 (images 가 @EntityGraph 로 로드된 뒤 사용)
-//        public String getThumbnailPath() {
-//            // 1. 이미지 컬렉션 자체가 비어있다면 바로 기본 이미지 반환
-//            if (images == null || images.isEmpty()) {
-//                return "/images/no-image.svg";
-//            }
-//
-//            // 2. 우선순위 체이닝 시작
-//            return images.stream()
-//                    .filter(PostImage::isThumbnail)                 // ① 대표 썸네일 필터링
-//                    .map(PostImage::getFilePath)
-//                    .filter(p -> p != null && !p.isBlank())
-//                    .findFirst()                                    // ② 있으면 추출
-//                    .orElseGet(() -> images.stream()                // ③ [차선책] 대표 썸네일이 없다면 재탐색
-//                            .map(PostImage::getFilePath)
-//                            .filter(p -> p != null && !p.isBlank())
-//                            .findFirst()                            // ④ 첫 번째 이미지 추출
-//                            .orElse("/images/no-image.svg")         // ⑤ 데이터가 전부 유효하지 않다면 최종 반환
-//                    );
-//        }
     }
 }
+

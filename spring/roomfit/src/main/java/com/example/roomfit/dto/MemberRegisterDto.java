@@ -9,7 +9,6 @@ import lombok.Setter;
 
 @Getter
 @Setter
-
 public class MemberRegisterDto {
     @NotBlank(message = "아이디를 입력하세요.")
     @Size(min = 4, max = 50, message = "아이디는 4~50자입니다.")

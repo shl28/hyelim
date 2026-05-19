@@ -1,5 +1,6 @@
 package com.example.roomfit.web;
 
+
 import com.example.roomfit.dto.MemberRegisterDto;
 import com.example.roomfit.service.MemberService;
 import jakarta.validation.Valid;
@@ -13,7 +14,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequiredArgsConstructor
-
 public class AuthController {
     private final MemberService memberService;
 
@@ -44,4 +44,6 @@ public class AuthController {
         ra.addFlashAttribute("message", "회원가입이 완료되었습니다.");
         return "redirect:/login";
     }
+
+
 }

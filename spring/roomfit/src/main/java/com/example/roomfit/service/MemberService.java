@@ -17,21 +17,22 @@ import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
-
 public class MemberService {
+
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public void register(MemberRegisterDto dto) {
-        if (!dto.getPassword().equals(dto.getPasswordConfirm()))
+    public void register(MemberRegisterDto dto){
+        if (!dto.getPassword().equals(dto.getPasswordConfirm())) {
             throw new BusinessException("비밀번호가 일치하지 않습니다.");
-
-        if (memberRepository.existsByLoginId(dto.getLoginId()))
+        }
+        if (memberRepository.existsByLoginId(dto.getLoginId())) {
             throw new BusinessException("이미 사용 중인 아이디입니다.");
-
-        if (memberRepository.existsByEmail(dto.getEmail()))
+        }
+        if (memberRepository.existsByEmail(dto.getEmail())) {
             throw new BusinessException("이미 사용 중인 이메일입니다.");
+        }
 
         Member member = Member.builder()
                 .loginId(dto.getLoginId())
@@ -44,7 +45,6 @@ public class MemberService {
                 .role(Role.USER)
                 .status(MemberStatus.ACTIVE)
                 .build();
-
         memberRepository.save(member);
     }
 
@@ -57,7 +57,6 @@ public class MemberService {
         return memberRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("회원을 찾을 수 없습니다."));
     }
-
     public String findLoginId(String name, String email) {
         return memberRepository.findByNameAndEmail(name, email)
                 .map(Member::getLoginId)
@@ -71,31 +70,31 @@ public class MemberService {
 //                                    "일치하는 회원 정보가 없습니다."
 //                            ));
 //
-//      return member.getLoginId();
-
+//return member.getLoginId();
     @Transactional
-    public void resetPassword(String loginId, String email, String newPassword) {
-        Member member = memberRepository.findByLoginId(loginId)
+    public void resetPassword(String loginId, String email, String newPassword){
+       Member member = memberRepository.findByLoginId(loginId)
                 .filter(m -> m.getEmail().equals(email))
-                .orElseThrow(() -> new  ResourceNotFoundException("일치하는 정보가 없습니다."));
-
-        member.setPassword(passwordEncoder.encode(newPassword));
+                .orElseThrow(()->new ResourceNotFoundException("일치하는 정보가 없습니다."));
+       member.setPassword(passwordEncoder.encode(newPassword));
     }
 
     @Transactional
     public void updateMember(Long memberId, String nickname, String phone, Gender gender) {
         Member member = findById(memberId);
-
         member.setNickname(nickname);
         member.setPhone(phone != null ? phone : "");
         member.setGender(gender);
         member.setUpdatedAt(LocalDateTime.now());
     }
-
     @Transactional
     public void withdraw(Long memberId) {
         Member member = findById(memberId);
         member.setStatus(MemberStatus.WITHDRAWN);
         member.setWithdrawnAt(LocalDateTime.now());
     }
+
+
+
+
 }
