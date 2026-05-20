@@ -60,7 +60,7 @@ public class MemberController {
 
     //mypage
     //@AuthenticationPrincipal Member member 현재 로긍힌 회원을  Member 엔티티로 넣어줌
-    @GetMapping("mypage")
+    @GetMapping("/mypage")
     public String mypage(@AuthenticationPrincipal Member member, Model model){
         model.addAttribute("profile", userProfileService.findByMemberId(member.getId()));
         return "member/mypage";
@@ -84,7 +84,7 @@ public class MemberController {
         return "redirect:/member/mypage";
     }
 
-    @PostMapping("withdraw")
+    @PostMapping("/withdraw")
     public String withdraw(@AuthenticationPrincipal Member member, RedirectAttributes ra) {
         memberService.withdraw(member.getId());
         ra.addFlashAttribute("message", "회원 탈퇴가 완료되었습니다.");
