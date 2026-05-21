@@ -9,6 +9,7 @@ import com.example.roomfit.repository.InteriorPostRepository;
 import com.example.roomfit.repository.PostLikeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,13 +60,11 @@ public class InteriorPostService {
 
 
     @Transactional(readOnly = true)
-    public java.util.List<InteriorPost> listPopularForView(int limit) {
-        java.util.List<InteriorPost> posts = interiorPostRepository
-                .findTop20ByStatusOrderByLikeCountDescViewCountDescCreatedAtDesc(
-                        PostStatus.VISIBLE, org.springframework.data.domain.PageRequest.of(0, limit));
+    public List<InteriorPost> listPopularForView(int limit) {
+        List<InteriorPost> posts = interiorPostRepository
+                .findTop20ByStatusOrderByLikeCountDescViewCountDescCreatedAtDesc(PostStatus.VISIBLE);
         posts.forEach(InteriorPost::getThumbnailPath);
-        return posts;
-//        인기 N건 + 썸네일
+        return posts.stream().limit(limit).toList();
     }
     /**
      * 상세 화면용: 조회수 증가·댓글·좋아요 여부를 한 트랜잭션에서 처리합니다.

@@ -26,8 +26,7 @@ public interface InteriorPostRepository extends JpaRepository<InteriorPost , Lon
     //상태에 맞는 게시글중 최신순(CreatedAtDesc) 상위 50개 가져오기
 
     @EntityGraph(attributePaths = "images")
-    List<InteriorPost> findTop20ByStatusOrderByLikeCountDescViewCountDescCreatedAtDesc(
-            PostStatus status, Pageable pageable);
+    List<InteriorPost> findTop20ByStatusOrderByLikeCountDescViewCountDescCreatedAtDesc(PostStatus status);
     //정렬 우선 순서
     //좋아요 desc
     //조회수 desc
@@ -47,4 +46,7 @@ public interface InteriorPostRepository extends JpaRepository<InteriorPost , Lon
     Optional<InteriorPost> findByIdAndStatus(Long id, PostStatus status);
     // 게시글 상세보기 id+상태
     //"images", "author" 한번 가저옴
+
+    long countByStatus(PostStatus postStatus);
+
 }
