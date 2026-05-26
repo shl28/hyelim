@@ -38,7 +38,7 @@ public class FileStorageService {
         String thumbnailName = "thumb_" + storedName;
 
         String dateFolder = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));
-        Path folderPath = Paths.get(uploadDir, dateFolder);
+        Path folderPath = Paths.get(uploadDir, dateFolder).toAbsolutePath().normalize();
 
         try {
             Files.createDirectories(folderPath);

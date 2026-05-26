@@ -5,7 +5,11 @@ import com.example.boardapp.dto.PostResponse;
 import com.example.boardapp.dto.PostUpdateRequest;
 import com.example.boardapp.security.LoginUser;
 import com.example.boardapp.service.PostService;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
+import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Valid;
+import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -15,12 +19,17 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/posts")
 @RequiredArgsConstructor
 public class PostController {
+
     private final PostService postService;
+    private final ObjectMapper objectMapper;
+    private final Validator validator;
 
     @GetMapping
     public ResponseEntity<List<PostResponse>> findAll() {
@@ -33,23 +42,40 @@ public class PostController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<PostResponse> create(@Valid @RequestPart("request") PostCreateRequest request,
-                                               @RequestPart(value = "files", required = false) List<MultipartFile> files,
-                                               @AuthenticationPrincipal LoginUser loginUser) {
+    public ResponseEntity<PostResponse> create(
+            @RequestPart("request") String requestJson,
+            @RequestPart(value = "files", required = false) List<MultipartFile> files,
+            @AuthenticationPrincipal LoginUser loginUser
+    ) throws JacksonException {
+
+        PostCreateRequest request = objectMapper.readValue(requestJson, PostCreateRequest.class);
+
+        Set<ConstraintViolation<PostCreateRequest>> violations = validator.validate(request);
+        if (!violations.isEmpty()) {
+            String msg = violations.stream()
+                    .map(v -> v.getPropertyPath() + ": " + v.getMessage())
+                    .collect(Collectors.joining(", "));
+            throw new IllegalArgumentException(msg);
+        }
+
         PostResponse response = postService.create(request, files, loginUser.getMember());
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PostResponse> update(@PathVariable Long id,
-                                               @Valid @RequestBody PostUpdateRequest request,
-                                               @AuthenticationPrincipal LoginUser loginUser) {
+    public ResponseEntity<PostResponse> update(
+            @PathVariable Long id,
+            @Valid @RequestBody PostUpdateRequest request,
+            @AuthenticationPrincipal LoginUser loginUser
+    ) {
         return ResponseEntity.ok(postService.update(id, request, loginUser.getMember()));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id,
-                                       @AuthenticationPrincipal LoginUser loginUser) {
+    public ResponseEntity<Void> delete(
+            @PathVariable Long id,
+            @AuthenticationPrincipal LoginUser loginUser
+    ) {
         postService.delete(id, loginUser.getMember());
         return ResponseEntity.noContent().build();
     }

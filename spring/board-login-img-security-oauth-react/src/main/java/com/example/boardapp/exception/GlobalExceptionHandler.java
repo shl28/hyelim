@@ -83,4 +83,12 @@ public class GlobalExceptionHandler {
         body.put("message", "파일 크기가 너무 큽니다. (파일당 최대 10MB)");
         return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE).body(body);
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Map<String, String>> handleIllegalArgument(IllegalArgumentException e) {
+        Map<String, String> body = new HashMap<>();
+        body.put("error", "BAD_REQUEST");
+        body.put("message", e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+    }
 }
