@@ -1,7 +1,10 @@
 package com.example.boardapp.controller;
 
+import com.example.boardapp.domain.Member;
 import com.example.boardapp.dto.LoginRequest;
 import com.example.boardapp.dto.MemberResponse;
+import com.example.boardapp.security.AuthPrincipalUtils;
+import com.example.boardapp.security.LoginOidcUser;
 import com.example.boardapp.security.LoginUser;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -48,8 +51,11 @@ public class AuthController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<MemberResponse> me(@AuthenticationPrincipal LoginUser loginUser) {
-        return ResponseEntity.ok(MemberResponse.from(loginUser.getMember()));
+    public ResponseEntity<MemberResponse> me(
+            @AuthenticationPrincipal Object principal
+    ) {
+        Member member = AuthPrincipalUtils.extractMember(principal);
+        return ResponseEntity.ok(MemberResponse.from(member));
     }
 
     @PostMapping("/logout")

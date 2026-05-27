@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -83,7 +84,13 @@ public class PostService {
 
         checkOwnership(post, loginMember);
 
+        List<PostImage> imagesToDelete = new ArrayList<>(post.getImages());
+
         postRepository.delete(post);
+
+        for (PostImage img : imagesToDelete) {
+            fileStorageService.deleteFile(img.getDateFolder(), img.getStoredName(), img.getThumbnailName());
+        }
     }
 
     private void checkOwnership(Post post, Member loginMember) {

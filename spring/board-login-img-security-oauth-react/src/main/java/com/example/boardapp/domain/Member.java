@@ -18,16 +18,36 @@ public class Member {
     @Column(nullable = false, unique = true, length = 50)
     private String username;
 
-    @Column(nullable = false, length = 100)
+    @Column(length = 100)
     private String password;
 
     @Column(nullable = false, length = 50)
     private String nickname;
 
+    @Column(length = 100)
+    private String email;
+
+    @Column(length = 30)
+    private String oauthProvider;
+
+    @Column(length = 100)
+    private String oauthProviderId;
+
     @Builder
-    private Member(String username, String password, String nickname) {
+    private Member(String username, String password, String nickname,
+                   String email, String oauthProvider, String oauthProviderId) {
         this.username = username;
         this.password = password;
         this.nickname = nickname;
+        this.email = email;
+        this.oauthProvider = oauthProvider;
+        this.oauthProviderId = oauthProviderId;
+    }
+
+    public void updateOAuthInfo(String email, String nickname) {
+        this.email = email;
+        if (nickname != null && !nickname.isBlank()) {
+            this.nickname = nickname;
+        }
     }
 }

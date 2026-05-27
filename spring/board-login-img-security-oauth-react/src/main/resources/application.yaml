@@ -25,8 +25,23 @@ spring:
       max-file-size: 10MB
       max-request-size: 30MB
 
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope:
+              - email
+              - profile
+              - openid
+
 file:
   upload-dir: ./uploads
+
+app:
+  frontend-url: http://localhost:5173
 
 logging:
   level:

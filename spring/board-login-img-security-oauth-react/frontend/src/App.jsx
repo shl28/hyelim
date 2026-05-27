@@ -4,13 +4,8 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import PostListPage from "./pages/PostListPage";
-
-function PostDetailPage() {
-    return <div>게시글 상세 (작성 예정)</div>;
-}
-function PostWritePage() {
-    return <div>글쓰기 (작성 예정)</div>;
-}
+import PostDetailPage from "./pages/PostDetailPage";
+import PostWritePage from "./pages/PostWritePage";
 
 function Header() {
     const { user, logout } = useAuth();
@@ -57,7 +52,7 @@ function App() {
     return (
         <>
             <Header />
-            <main style={{ padding: "2rem" }}>
+            <main className="p-8 bg-gray-50 min-h-screen">
                 <Routes>
                     <Route path="/" element={<PostListPage />} />
                     <Route path="/posts" element={<PostListPage />} />

@@ -15,6 +15,14 @@ export default defineConfig({
                 target: "http://localhost:8088",
                 changeOrigin: true,
             },
+            "/oauth2": {
+                target: "http://localhost:8088",
+                changeOrigin: true,
+            },
+            "/login/oauth2": {
+                target: "http://localhost:8088",
+                changeOrigin: true,
+            },
         },
     },
 });

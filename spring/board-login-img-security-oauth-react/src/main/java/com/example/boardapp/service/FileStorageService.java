@@ -96,4 +96,24 @@ public class FileStorageService {
         int dotIndex = filename.lastIndexOf(".");
         return filename.substring(dotIndex + 1).toLowerCase();
     }
+
+    public void deleteFile(String dateFolder, String storedName, String thumbnailName) {
+        Path folderPath = Paths.get(uploadDir, dateFolder).toAbsolutePath().normalize();
+
+        deleteIfExists(folderPath.resolve(storedName));
+        deleteIfExists(folderPath.resolve(thumbnailName));
+    }
+
+    private void deleteIfExists(Path path) {
+        try {
+            boolean deleted = Files.deleteIfExists(path);
+            if (deleted) {
+                log.info("파일 삭제: {}", path);
+            } else {
+                log.warn("삭제할 파일이 없음: {}", path);
+            }
+        } catch (IOException e) {
+            log.error("파일 삭제 실패: {}", path, e);
+        }
+    }
 }

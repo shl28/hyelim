@@ -3,6 +3,7 @@ package com.example.boardapp.controller;
 import com.example.boardapp.dto.PostCreateRequest;
 import com.example.boardapp.dto.PostResponse;
 import com.example.boardapp.dto.PostUpdateRequest;
+import com.example.boardapp.security.AuthPrincipalUtils;
 import com.example.boardapp.security.LoginUser;
 import com.example.boardapp.service.PostService;
 import tools.jackson.core.JacksonException;
@@ -45,7 +46,7 @@ public class PostController {
     public ResponseEntity<PostResponse> create(
             @RequestPart("request") String requestJson,
             @RequestPart(value = "files", required = false) List<MultipartFile> files,
-            @AuthenticationPrincipal LoginUser loginUser
+            @AuthenticationPrincipal Object principal
     ) throws JacksonException {
 
         PostCreateRequest request = objectMapper.readValue(requestJson, PostCreateRequest.class);
@@ -58,7 +59,7 @@ public class PostController {
             throw new IllegalArgumentException(msg);
         }
 
-        PostResponse response = postService.create(request, files, loginUser.getMember());
+        PostResponse response = postService.create(request, files, AuthPrincipalUtils.extractMember(principal));
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -66,17 +67,17 @@ public class PostController {
     public ResponseEntity<PostResponse> update(
             @PathVariable Long id,
             @Valid @RequestBody PostUpdateRequest request,
-            @AuthenticationPrincipal LoginUser loginUser
+            @AuthenticationPrincipal Object principal
     ) {
-        return ResponseEntity.ok(postService.update(id, request, loginUser.getMember()));
+        return ResponseEntity.ok(postService.update(id, request, AuthPrincipalUtils.extractMember(principal)));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
             @PathVariable Long id,
-            @AuthenticationPrincipal LoginUser loginUser
+            @AuthenticationPrincipal Object principal
     ) {
-        postService.delete(id, loginUser.getMember());
+        postService.delete(id, AuthPrincipalUtils.extractMember(principal));
         return ResponseEntity.noContent().build();
     }
 }
