@@ -35,3 +35,9 @@ out/
 
 ### VS Code ###
 .vscode/
+
+application-prod.properties
+
+.env
+
+crud2-image.tar
